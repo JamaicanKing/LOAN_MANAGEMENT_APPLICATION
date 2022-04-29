@@ -26,7 +26,7 @@ class CreateCustomerDetailsTable extends Migration
             $table->string('identification_number');
             $table->date('identification_expiration');
             $table->string('contact_person_name');
-            $table->string('contact_person_add');
+            $table->string('contact_person_address');
             $table->decimal('contact_person_number',11,0);
             $table->string('kinship');
             $table->string('length_of_relationship');

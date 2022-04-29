@@ -22,6 +22,7 @@
         <th scope="col" style="text-align: left;">Loan Amount</th>
         <th scope="col" style="text-align: left;">Interest Rate</th>
         <th scope="col" style="text-align: left;">Loan Released Date</th>
+        <th scope="col" style="text-align: left;">Status</th>
         <th scope="col" style="text-align: left;">Actions</th>
       </tr>
     </thead>
@@ -40,20 +41,33 @@
 <script>
   $(function(){
       $('#example').DataTable({
+        ajax : '{{ route('api.loanDetail.index') }}',
+            dom: 'Bfrtip',
           processing: true,
           serverSide: true,
-          ajax : '{{ route('api.loanDetail.index') }}',
+          /*"searching":true,
+          "paging": true,
+            "order": true,*/
+            buttons: [
+                'copy',
+                'excel',
+                'csv',
+                'pdf'
+            ],
+            columns: [
+            {data : "loanId", },
+            {data : "name", },
+            {data : "loan_amount" },
+            {data : "rate"},
+            {data: "interest_start_date"},
+            {data: "status"},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+            ]  
+            
           
-          columns: [
-              {data : "loanId", },
-              {data : "name", },
-              {data : "loan_amount" },
-              {data : "rate"},
-              {data: "interest_start_date"},
-              {data: 'action', name: 'action', orderable: false, searchable: false},
-             
-          ]
+        
           
       });
+
   });
 </script>

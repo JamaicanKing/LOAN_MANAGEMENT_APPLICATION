@@ -1,6 +1,34 @@
+@json($loan)
 @yield('styling')
 <style>
-    {
+    .links {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    }
+
+    /* Style the buttons that are used to open the tab content */
+    .links button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    }
+
+    /* Change background color of buttons on hover */
+    .links button:hover {
+    background-color: #ddd;
+    }
+
+    /* Create an active/current tablink class */
+    .links button.active {
+    background-color: #ccc;
+    }
+   
+    *{
         box-sizing: border-box;
     }
 
@@ -30,6 +58,11 @@
         border: 1px solid #aaaaaa;
     }
 
+    #reject{
+        background-color: red;
+        
+    }
+
     /* Mark input boxes that gets an error on validation: */
     input.invalid {
         background-color: #ffdddd;
@@ -56,20 +89,9 @@
         opacity: 0.8;
     }
 
-    #prevBtn {
-        background-color: #bbbbbb;
-        margin-right: 6px;
-        margin-top: 5px;
-    }
-
-    #nextBtn {
-        background-color: blue;
-        margin-right: 6px;
-        margin-top: 5px;
-    }
 
     /* Make circles that indicate the steps of the form: */
-    .step {
+   .step {
         height: 15px;
         width: 15px;
         margin: 0 2px;
@@ -107,11 +129,12 @@
         </div>
     @endif
 
-    <form method="POST" id="regForm"  action="{{ route('loan.store') }}"  runat="server" enctype="multipart/form-data">
+    <form method="POST" id="regForm"  action="{{ route('loan.update',['loan' => $loan[0]->loanId]) }}" enctype="multipart/form-data">
+        @method('PUT')
         @csrf
         <div class="shadow overflow-hidden sm:rounded-md">
 
-            <div class="tab">Personal Information:
+            <div class="tab" id="personal_info">Personal Information:
                 <div class="px-4 py-5 bg-white sm:p-6">
                     <div class="grid grid-cols-6 gap-6">
                         <div class="col-span-6 sm:col-span-3">
@@ -119,7 +142,7 @@
                                 class="block text-sm font-medium text-gray-700">{{ __('First Name') }}</label>
                             <input id="firstname" oninput="this.className = ''" type="text"
                                 class="form-control @error('firstname') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="firstname" value="{{ old('firstname') }}" autocomplete="firstname" autofocus>
+                                name="firstname" value="{{ $loan[0]->firstname }}" autocomplete="firstname" autofocus>
 
                             @error('firstname')
                                 <span class="invalid-feedback" role="alert">
@@ -134,7 +157,7 @@
                                 class="block text-sm font-medium text-gray-700">{{ __('Last Name') }}</label>
                             <input id="lastname" oninput="this.className = ''" type="text"
                                 class="form-control @error('lastname') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="lastname" value="{{ old('lastname') }}" autocomplete="lastname" autofocus>
+                                name="lastname" value="{{ $loan[0]->lastname }}" autocomplete="lastname" autofocus>
 
                             @error('lastname')
                                 <span class="invalid-feedback" role="alert">
@@ -149,7 +172,7 @@
                                 class="block text-sm font-medium text-gray-700">{{ __('Email') }}</label>
                             <input id="email" oninput="this.className = ''" type="text"
                                 class="form-control @error('email') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="email" value="{{ old('emal') }}" autocomplete="email" autofocus>
+                                name="email" value="{{ $loan[0]->email }}" autocomplete="email" autofocus>
 
                             @error('email')
                                 <span class="invalid-feedback" role="alert">vendor
@@ -165,7 +188,7 @@
 
                             <input id="phone_number" oninput="this.className = ''" type="text"
                                 class="form-control @error('phone_number') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="phone_number" value="{{ old('phone_number') }}" autocomplete="phone_number"
+                                name="phone_number" value="{{ $loan[0]->phone_number }}" autocomplete="phone_number"
                                 autofocus>
 
                             @error('phone_number')
@@ -182,7 +205,7 @@
 
                             <input id="address" oninput="this.className = ''" type="text"
                                 class="form-control @error('address') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="address" value="{{ old('address') }}" autocomplete="address" autofocus>
+                                name="address" value="{{ $loan[0]->address }}" autocomplete="address" autofocus>
 
                             @error('address')
                                 <span class="invalid-feedback" role="alert">
@@ -197,7 +220,7 @@
 
                             <input id="street_address" oninput="this.className = ''" type="text"
                                 class="form-control @error('street_address') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="street_address" value="{{ old('street_address') }}"
+                                name="street_address" value="{{ $loan[0]->street_address }}"
                                 autocomplete="street_address" autofocus>
 
                             @error('street_address')
@@ -214,7 +237,7 @@
 
                             <input id="city" oninput="this.className = ''" type="text"
                                 class="form-control @error('city') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="city" value="{{ old('city') }}" autocomplete="city" autofocus>
+                                name="city" value="{{ $loan[0]->city }}" autocomplete="city" autofocus>
 
                             @error('city')
                                 <span class="invalid-feedback" role="alert">
@@ -229,7 +252,7 @@
 
                             <input id="state" oninput="this.className = ''" type="text"
                                 class="form-control @error('state') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="state" value="{{ old('state') }}" autocomplete="state" autofocus>
+                                name="state" value="{{ $loan[0]->state }}" autocomplete="state" autofocus>
 
                             @error('state')
                                 <span class="invalid-feedback" role="alert">
@@ -244,7 +267,7 @@
 
                             <input id="postal" oninput="this.className = ''" type="text"
                                 class="form-control @error('postal') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="postal" value="{{ old('postal') }}" autocomplete="postal" autofocus>
+                                name="postal" value="{{ $loan[0]->postal }}" autocomplete="postal" autofocus>
 
                             @error('postal')
                                 <span class="invalid-feedback" role="alert">
@@ -260,7 +283,7 @@
                             <input id="trn" oninput="this.className = ''" type="text" minlength="9" maxlength="9"
                                 pattern="{_}{_}{_}-{_}{_}{_}-{_}{_}{_}"
                                 class="form-control @error('trn') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="trn" value="{{ old('trn') }}" autocomplete="trn" autofocus>
+                                name="trn" value="{{ $loan[0]->trn }}" autocomplete="trn" autofocus>
 
                             @error('trn')
                                 <span class="invalid-feedback" role="alert">
@@ -273,7 +296,7 @@
                             <div class="image-upload">
                                 <label for="identification"
                                     class="block text-sm font-medium text-gray-700">{{ __('INSERT IDENTIFICATION HERE') }}</label>
-                                
+                                <img src="data:image;base64, " alt="Image" />
 
 
                                 <div>
@@ -288,7 +311,7 @@
 
                             <input id="identification_number" oninput="this.className = ''" type="text"
                                 class="form-control @error('identification_number') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="identification_number" value="{{ old('identification_number') }}"
+                                name="identification_number" value="{{ $loan[0]->identification_number }}"
                                 autocomplete="identification_number" autofocus>
 
                             @error('identification_number')
@@ -303,12 +326,13 @@
                                 class="block text-sm font-medium text-gray-700">{{ __('Identification Expiration ') }}</label>
                             <input oninput="this.className = ''" type="date" id="identification_expiration"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="identification_expiration">
+                                name="identification_expiration" value="{{ $loan[0]->identification_expiration }}"
+                                autocomplete="identification_expiration" autofocus>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="tab">Contact Person Information:
+            <div class="tab" id="contact_person_info">Contact Person Information:
                 <div class="px-4 py-5 bg-white sm:p-6">
                     <div class="grid grid-cols-6 gap-6">
                         <div class="col-span-6 sm:col-span-6">
@@ -317,7 +341,7 @@
 
                             <input id="contact_person_name" oninput="this.className = ''" type="text"
                                 class="form-control @error('contact_person_name') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="contact_person_name" value="{{ old('contact_person_name') }}"
+                                name="contact_person_name" value="{{ $loan[0]->contact_person_name }}"
                                 autocomplete="contact_person_name" autofocus>
                         </div>
 
@@ -327,7 +351,7 @@
 
                             <input id="contact_person_address" oninput="this.className = ''" type="text"
                                 class="form-control @error('contact_person_address') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="contact_person_address" value="{{ old('contact_person_address') }}"
+                                name="contact_person_address" value="{{ $loan[0]->contact_person_address }}"
                                 autocomplete="contact_person_address" autofocus>
 
                             @error('contact_person_address')
@@ -343,7 +367,7 @@
 
                             <input id="contact_person_number" oninput="this.className = ''" type="text"
                                 class="form-control @error('contact_person_number') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="contact_person_number" value="{{ old('contact_person_number') }}"
+                                name="contact_person_number" value="{{ $loan[0]->contact_person_number }}"
                                 autocomplete="contact_person_number" autofocus>
 
                             @error('contact_person_number')
@@ -359,7 +383,7 @@
 
                             <input id="kinship" oninput="this.className = ''" type="text"
                                 class="form-control @error('kinship') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="kinship" name="kinship" value="{{ old('kinship') }}" autocomplete="kinship"
+                                name="kinship" name="kinship" value="{{ $loan[0]->kinship }}" autocomplete="kinship"
                                 autofocus>
 
                             @error('kinship')
@@ -375,7 +399,7 @@
 
                             <input id="length_of_relationship" oninput="this.className = ''" type="text"
                                 class="form-control @error('length_of_relationship') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="length_of_relationship" value="{{ old('length_of_relationship') }}"
+                                name="length_of_relationship" value="{{ $loan[0]->length_of_relationship }}"
                                 autocomplete="length_of_relationship" autofocus>
 
                             @error('length_of_relationship')
@@ -388,7 +412,7 @@
                 </div>
             </div>
 
-            <div class="tab">Employment Information:
+            <div class="tab" id="employment_info">Employment Information:
                 <div class="px-4 py-5 bg-white sm:p-6">
                     <div class="grid grid-cols-6 gap-6">
                         <div class="col-span-6 sm:col-span-6">
@@ -397,7 +421,7 @@
 
                             <input id="name_of_employer" oninput="this.className = ''" type="text"
                                 class="form-control @error('name_of_employer') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="name_of_employer" value="{{ old('name_of_employer') }}"
+                                name="name_of_employer" value="{{ $loan[0]->name_of_employer }}"
                                 autocomplete="name_of_employer" autofocus>
 
                             @error('name_of_employer')
@@ -414,7 +438,7 @@
 
                             <input id="address_of_employer" oninput="this.className = ''" type="text"
                                 class="form-control @error('address_of_employer') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="address_of_employer" value="{{ old('address_of_employer') }}"
+                                name="address_of_employer" value="{{ $loan[0]->address_of_employer }}"
                                 autocomplete="address_of_employer" autofocus>
 
                             @error('address_of_employer')
@@ -431,7 +455,7 @@
 
                             <input id="position_held" oninput="this.className = ''" type="text"
                                 class="form-control @error('position_held') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="position_held" value="{{ old('position_held') }}" autocomplete="position_held"
+                                name="position_held" value="{{ $loan[0]->position_held }}" autocomplete="position_held"
                                 autofocus>
 
                             @error('position_held')
@@ -448,7 +472,7 @@
 
                             <input id="tenure" oninput="this.className = ''" type="text"
                                 class="form-control @error('tenure') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="tenure" value="{{ old('tenure') }}" autocomplete="tenure" autofocus>
+                                name="tenure" value="{{ $loan[0]->tenure }}" autocomplete="tenure" autofocus>
 
                             @error('tenure')
                                 <span class="invalid-feedback" role="alert">
@@ -459,7 +483,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab">Loan Information:
+            <div class="tab" id="loan_info">Loan Information:
                 <div class="px-4 py-5 bg-white sm:p-6">
                     <div class="grid grid-cols-6 gap-6">
                         <div class="col-span-6 sm:col-span-6">
@@ -468,7 +492,7 @@
 
                             <input id="loan_amount" oninput="this.className = ''" type="text"
                                 class="form-control @error('loan_amount') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="loan_amount" value="{{ old('loan_amount') }}" autocomplete="loan_amount"
+                                name="loan_amount" value="{{ $loan[0]->loan_amount }}" autocomplete="loan_amount"
                                 autofocus>
 
                             @error('loan_amount')
@@ -484,7 +508,7 @@
 
                             <input id="loan_amount_string" oninput="this.className = ''" type="text"
                                 class="form-control @error('loan_amount_string') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="loan_amount_string" value="{{ old('loan_amount_string') }}"
+                                name="loan_amount_string" value="{{ $loan[0]->loan_amount_string }}"
                                 autocomplete="loan_amount_string" autofocus>
 
                             @error('loan_amount_string')
@@ -494,32 +518,33 @@
                             @enderror
                         </div>
 
-                        <div class="col-span-6 sm:col-span-6">
-                            <label for="repayment_cycle" class="block text-sm font-medium text-gray-700"><b>{{ __('Repayment Cycle') }}</b></label>
-                            <div style="visibility:hidden; color:red; " id="chk_option_error">
-                                Please select at least one option.
-                                </div>
-                            
-                            <input type="checkbox" id="cycle_weekly" name="repayment_cycle" value="Weekly">
-                            <label for="cycle">Weekly</label><br>
-                            <input type="checkbox" id="cycle_fortnightly" name="repayment_cycle" value="Fortnighty">
-                            <label for="cycle">Fortnightly</label><br>
-                            <input type="checkbox" id="cycle_monthly" name="repayment_cycle" value="monthly">
-                            <label for="cycle">Monthly</label><br>
-                        </div>
-
-                        <div class="col-span-6 sm:col-span-6">
-                            <label for="repayment_cycle" class="block text-sm font-medium text-gray-700"><b>{{ __('Method in which you would like to receive loan?') }}</b></label>
-                            <div style="visibility:hidden; color:red; " id="chk_option_error2">
-                                Please select at least one option.
+                        <div class="col-span-6 sm:col-span-2">
+                            <label for="repayment_cycle" class="block text-sm font-medium text-gray-700">{{ __('Repayment Cycle') }}</label>
+                        
+                            <div class="col-span-2 sm:col-span-2">
+                                <select class="dropdown-toggle inline-block px-7 py-2.5 bg-purple-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg active:text-white transition duration-150 ease-in-out flex items-center whitespace-nowrap" aria-label="Default select example" name="repayment_cycle" id="repayment_cycle"  for="repayment_cycle" >
+                                    <option value="">{{ $loan[0]->repayment_cycle }}</option>
+                                    <option value="weekly">{{ __("Weekly") }}</option>
+                                    <option value="fortnightly">{{ __("Fortnightly") }}</option>
+                                    <option value="monthly">{{ __("Monthly") }}</option>
+                                </select>
                             </div>
-                            
-                            <input type="checkbox" id="bank_transfer" name="receive_method" value="Bank transfer">
-                            <label for="cycle">Bank Tranfer</label><br>
-                            <input type="checkbox" id="cash_in_hand" onchange="showHideBankingInfo(this.value)" name="receive_method" value="cash in hand ">
-                            <label for="cycle">Cash In Hand</label><br>
+
                         </div>
 
+                        <div class="col-span-6 sm:col-span-3">
+                            <label for="received_method" class="block text-sm font-medium text-gray-700">{{ __('Method in which you would like to receive loan?') }}</label>
+                        
+                            <div class="col-span-2 sm:col-span-2">
+                                <select class="dropdown-toggle inline-block px-7 py-2.5 bg-purple-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg active:text-white transition duration-150 ease-in-out flex items-center whitespace-nowrap" aria-label="Default select example"  onchange="showHideBankingInfo(this.value)" name="received_method" id="received_method"  for="received_method" onchange="showHideBankingInfo(this.value)" name="received_method" id="received_method"  for="received_method" >
+                                    <option value="">{{ $loan[0]->receive_method }}</option>
+                                    <option value="Cash In Hand">{{ __("Cash In Hand") }}</option>
+                                    <option value="Bank Tranfer">{{ __("Bank Transfer") }}</option>
+                                </select>
+                            </div>
+
+
+                        </div>
                         <div id="bankingInfo" class="col-span-6">
                             <div class="col-span-6 sm:col-span-6">
                                 <label for="maintainace_branch"
@@ -527,7 +552,7 @@
 
                                 <input id="maintainace_branch" oninput="this.className = ''" type="text"
                                     class="form-control @error('maintainace_branch') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    name="maintainace_branch" value="{{ old('maintainace_branch') }}"
+                                    name="maintainace_branch" value="{{ $loan[0]->maintainace_branch }}"
                                     autocomplete="maintainace_branch" autofocus>
 
                                 @error('maintainace_branch')
@@ -543,7 +568,7 @@
 
                                 <input id="name_on_account" oninput="this.className = ''" type="text"
                                     class="form-control @error('name_on_account') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    name="name_on_account" value="{{ old('name_on_account') }}"
+                                    name="name_on_account" value="{{ $loan[0]->name_on_account }}"
                                     autocomplete="name_on_account" autofocus>
 
                                 @error('name_on_account')
@@ -559,7 +584,7 @@
 
                                 <input id="account_number" oninput="this.className = ''" type="text"
                                     class="form-control @error('account_number') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    name="account_number" value="{{ old('account_number') }}"
+                                    name="account_number" value="{{ $loan[0]->account_number }}"
                                     autocomplete="account_number" autofocus>
 
                                 @error('account_number')
@@ -575,7 +600,7 @@
 
                                 <input id="account_type" oninput="this.className = ''" type="text"
                                     class="form-control @error('account_number') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    name="account_type" value="{{ old('account_type') }}"
+                                    name="account_type" value="{{ $loan[0]->account_type }}"
                                     autocomplete="account_number" autofocus>
 
                                 @error('account_type')
@@ -611,16 +636,37 @@
                               id="notes"
                                 name="note"
                               placeholder="Your message to us"
-                            ></textarea>
-                          </div>
+                            >{{ $loan[0]->note }}</textarea>
+                        </div>
+
+                        <input id=status name="status" type="hidden" value="">
+                        <input id=client_id name="client_id" type="hidden" value="{{ $loan[0]->client_id }}">
 
                     </div>
                 </div>
-
+                
             </div>
-        </div>
+            <div class="links">
+                <button type='button' class="tablinks" onclick="openForm(event, 'personal_info')">Personal Information</button>
+                <button type='button'class="tablinks" onclick="openForm(event, 'contact_person_info')">Contact Perosn Information</button>
+                <button type='button'class="tablinks" onclick="openForm(event, 'employment_info')">Employment Information</button>
+                <button type='button' class="tablinks" onclick="openForm(event, 'loan_info')">Loan Information</button>  
+                <div class="container">
 
-        <button type="button" id="prevBtn"
+                    <button type='button' onclick="rejectApplication()" id="rejected" style=" background-color: red; float:right; margin-left:5px; margin-top: 2px; "class="inline-block px-6 py-2.5 inset-y-0 right-0 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded-full shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out">
+                        Reject
+                    </button>
+
+                    <button type='button' onclick="approveApplication()" id="Approved" style=" background-color: green; float:right; margin-top: 2px;" class="inline-block px-6 py-2.5 inset-y-0 right-0 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded-full shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out" >
+                        Approved
+                    </button>
+                </div>   
+            </div>
+            
+
+        
+
+        <!--<button type="button" id="prevBtn"
             class="inline-block px-6 py-2.5 bg-gray-200 text-black font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out"
             onclick="nextPrev(-1)">Previous</button>
 
@@ -628,19 +674,17 @@
             class="inline-block mt-2 px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
             onclick="nextPrev(1)">Next</button>
 
-        <!-- Circles which indicates the steps of the form: -->
-        <div style="text-align:center;margin-top:40px;">
-            <span class="step"></span>
-            <span class="step"></span>
-            <span class="step"></span>
-            <span class="step"></span>
-        </div>
+         Circles which indicates the steps of the form: -->
+        
 
     </form>
 
 </x-app-layout>
 @section('java')
     <script>
+
+        
+
         var currentTab = 0; // Current tab is set to be the first tab (0)
         showTab(currentTab); // Display the current tab
 
@@ -649,90 +693,55 @@
             var x = document.getElementsByClassName("tab");
             x[n].style.display = "block";
             //... and fix the Previous/Next buttons:
-            if (n == 0) {
-                document.getElementById("prevBtn").style.display = "none";
-            } else {
-                document.getElementById("prevBtn").style.display = "inline";
-            }
-            if (n == (x.length - 1)) {
-                document.getElementById("nextBtn").innerHTML = "Submit";
-            } else {
-                document.getElementById("nextBtn").innerHTML = "Next";
-            }
-            //... and run a function that will display the correct step indicator:
-            fixStepIndicator(n)
         }
 
-        function nextPrev(n) {
-            // This function will figure out which tab to display
-            var x = document.getElementsByClassName("tab");
-            // Exit the function if any field in the current tab is invalid:
-            if (n == 1 && !validateForm()) return false;
-            // Hide the current tab:
-            x[currentTab].style.display = "none";
-            // Increase or decrease the current tab by 1:
-            currentTab = currentTab + n;
-            // if you have reached the end of the form...
-            if (currentTab >= x.length) {
-                // ... the form gets submitted:
-                document.getElementById("regForm").submit();
-                return false;
-            }
-            // Otherwise, display the correct tab:
-            showTab(currentTab);
+        function openForm(evt, sectionName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(sectionName).style.display = "block";
+        evt.currentTarget.className += " active";
         }
 
         function validateForm() {
             // This function deals with validation of the form fields
-            var x, y, i, z, valid = true;
-
+            var x, y, i, valid = true;
             x = document.getElementsByClassName("tab");
             y = x[currentTab].getElementsByTagName("input");
-            
             // A loop that checks every input field in the current tab:
             for (i = 0; i < y.length; i++) {
                 // If a field is empty...
-                /*if (y[i].value == "" && y[i].id != "maintainace_branch" && y[i].id != "name_on_account" && y[i].id != "account_number" && y[i].id != "account_type") {
-                   // add an "invalid" class to the field:
-                   y[i].className += " invalid";
+                if (y[i].value == "" && y[i].id != "maintainace_branch" && y[i].id != "name_on_account" && y[i].id != "account_number" && y[i].id != "account_type") {
+                    // add an "invalid" class to the field:
+                    y[i].className += " invalid";
                     // and set the current valid status to false
                     valid = false;
-                }*/
-            }
-            
-                if(y["cycle_weekly"]  && document.querySelector('#cycle_weekly:checked') !== null || y["cycle_monthly"] && document.querySelector('#cycle_monthly:checked') !== null ||  y["cycle_fortnightly"] && document.querySelector('#cycle_fortnightly:checked') !== null ){
-                   valid = true;
-                   
-                }else if(y["cycle_weekly"]  && document.querySelector('#cycle_weekly:checked') === null || y["cycle_monthly"] && document.querySelector('#cycle_monthly:checked') === null ||  y["cycle_fortnightly"] && document.querySelector('#cycle_fortnightly:checked') === null ){
-                    document.getElementById("chk_option_error").style.visibility = "visible";
-                    y[i].className += " invalid";
-                    valid = false;
                 }
-
-                if(y["bank_transfer"]  && document.querySelector('#bank_transfer:checked') !== null || y["cash_in_hand"] && document.querySelector('#cash_in_hand:checked') !== null){
-                   valid = true;
-                   
-                }else if(y["bank_transfer"]  && document.querySelector('#bank_transfer:checked') === null || y["cash_in_hand"] && document.querySelector('#cash_in_hand:checked') === null){
-                    document.getElementById("chk_option_error2").style.visibility = "visible";
-                    y[i].className += " invalid";
-                    valid = false;
-                }         
-              
+            }
             // If the valid status is true, mark the step as finished and valid:
             if (valid) {
-                document.getElementsByClassName("step")[currentTab].className += " finish";
-                
+                document.getElementsByClassName("tablinks")[currentTab].className += " finish";
             }
             return valid; // return the valid status
+
+            if (valid) {
+              document.getElementsByClassName("tablinks")[currentTab].className += " finish";
+            }
+            return valid;
         }
 
         function fixStepIndicator(n) {
             // This function removes the "active" class of all steps...
-            var i, x = document.getElementsByClassName("step");
+            var i, x = document.getElementsByClassName("tablinks");
             for (i = 0; i < x.length; i++) {
                 x[i].className = x[i].className.replace(" active", "");
             }
-
             //... and adds the "active" class on the current step:
             x[n].className += " active";
         }
@@ -740,27 +749,27 @@
         function showHideBankingInfo(value){
             var x = document.getElementById("bankingInfo");
             
-            if(document.querySelector('#cash_in_hand:checked') !== null){
+            if(value ==  "Cash In Hand"){
                 x.style.display = "none";
             }else{
                 x.style.display = "block";
             }
         }
 
-        function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            
-            reader.onload = function (e) {
-                $('#file').attr('src', e.target.result);
-            }
-            
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    
-        $("#image").change(function(){
-            readURL(this);
-        });
-    </script>
+        function rejectApplication(){
 
+            var x = document.getElementById("status");
+            x.value = 3;
+            document.forms['regForm'].action = "{{ route('loan.update',['loan' => $loan[0]->loanId]) }}";
+            document.forms['regForm'].submit();
+
+        }
+
+        function approveApplication(){
+
+        var x = document.getElementById("status");
+        x.value = 4;
+        document.forms['regForm'].action = "{{ route('loan.update',['loan' => $loan[0]->loanId]) }}";
+            document.forms['regForm'].submit();
+        }
+    </script>

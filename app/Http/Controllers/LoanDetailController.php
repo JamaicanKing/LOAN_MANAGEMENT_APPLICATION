@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\CustomerEmploymentDetail;
 use App\Models\InterestRate;
 use App\Models\LoanStatuses;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class LoanDetailController extends Controller
 {
@@ -41,6 +44,7 @@ class LoanDetailController extends Controller
      */
     public function store(Request $request)
     {
+        
         $statuses = LoanStatuses::getAllStatuses();
         $interestrates = InterestRate::getAllRates();
         $interestRate = 0;
@@ -53,14 +57,14 @@ class LoanDetailController extends Controller
         }
         $customerDetails = CustomerDetail::create([
             'user_id' =>   Auth::user()->id,
-            'contact_person_add' => $request->input('contact_person_address'),
+            'contact_person_address' => $request->input('contact_person_address'),
             'email' =>   $request->input('email'),
             'phone_number' => $request->input('phone_number'),
             'address' => $request->input('address'),
             'street_address' => $request->input('street_address'),
             'city' => $request->input('city'),
-            'state/province' => $request->input('state'),
-            'postal/zip_code' => $request->input('postal'),
+            'state' => $request->input('state'),
+            'postal' => $request->input('postal'),
             'trn' => $request->input('trn'),
             'identification' => $request->file('file')->path(),
             'identification_number' => $request->input('identification_number'),
@@ -88,7 +92,7 @@ class LoanDetailController extends Controller
                 'repayment_cylce' => $request->input('repayment_cylce'),
                 'loan_amount' => $request->input('loan_amount'),
                 'loan_amount_string' => $request->input('loan_amount_string'),
-                'receive_method' => $request->input('received_method'),
+                'receive_method' => $request->input('receive_method'),
                 'maintainace_branch' => $request->input('maintainace_branch'),
                 'balance' => $balance,
                 'name_on_account' => $request->input('name_on_account'),
@@ -126,7 +130,8 @@ class LoanDetailController extends Controller
      */
     public function edit($id)
     {
-        //
+        $loan = LoanDetail::getLoanById($id);
+        return view('loan.edit',['loan' => $loan]);
     }
 
     /**
@@ -138,7 +143,69 @@ class LoanDetailController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        dd($request);
+        $statuses = LoanStatuses::getAllStatuses();
+        $interestrates = InterestRate::getAllRates();
+        $interestRate = 0;
+        $balance = 0;
+        foreach($interestrates as  $rate => $value){
+            if($request->input('loan_amount') >= $value->minimum && $request->input('loan_amount') <= $value->maximum){
+                $interestRate = $value->id;
+                $balance = ($request->input('loan_amount') * $value->rate) + $request->input('loan_amount');
+            }
+        }
+                $customerDetails = DB::table('customer_details')
+                            ->where('user_id',$request->input('client_id'))
+                            ->update([
+                                'contact_person_address' => $request->input('contact_person_address'),
+                                'phone_number' => $request->input('phone_number'),
+                                'address' => $request->input('address'),
+                                'street_address' => $request->input('street_address'),
+                                'city' => $request->input('city'),
+                                'state' => $request->input('state'),
+                                'postal' => $request->input('postal'),
+                                'trn' => $request->input('trn'),
+                                //'identification' => $request->file('file')->path(),
+                                'identification_number' => $request->input('identification_number'),
+                                'identification_expiration' => $request->input('identification_expiration'),
+                                'contact_person_name' => $request->input('contact_person_name'),
+                                'contact_person_number' => $request->input('contact_person_number'),
+                                'kinship' => $request->input('kinship'),
+                                'length_of_relationship' => $request->input('length_of_relationship'),
+                                    ]);
+
+                    $employmentDetails = DB::table('customer_employment_details')
+                    ->where('user_id','=',$request->input('client_id'))
+                    ->update([
+                        'name_of_employer' => $request->input('name_of_employer'),
+                        'address_of_employer' => $request->input('address_of_employer'),
+                        'position_held' => $request->input('position_held'),
+                        'tenure' => $request->input('tenure'),
+                    ]);
+ 
+                    $LoanDetails = DB::table('loan_details')
+                    ->where('id','=',"$id")
+                    ->update(
+                        [
+                        //'interest_rate_id' => $interestRate,
+                        'loan_amount' => $request->input('loan_amount'),
+                        'loan_amount_string' => $request->input('loan_amount_string'),
+                        'receive_method' => $request->input('received_method'),
+                        'maintainace_branch' => $request->input('maintainace_branch'),
+                        //'balance' => $balance,
+                        'name_on_account' => $request->input('name_on_account'),
+                        'account_type' => $request->input('account_type'),
+                        'note' => $request->input('note'),
+                        'loan_status_id' => $request->input('status'),
+                        'updated_by' => Auth::user()->id,
+                        'repayment_cycle' => $request->input('repayment_cycle'),
+                    ]);
+
+        if($LoanDetails){
+            return redirect()->route('loan.index')->with('status', 'Status Successfully updated');
+        }else{
+            return redirect()->route('loan.index')->with('status','Unable to update Loan Information');
+        }
     }
 
     /**

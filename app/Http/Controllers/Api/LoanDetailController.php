@@ -18,7 +18,7 @@ class LoanDetailController extends Controller
     {
         $loans = LoanDetail::getAllLoans();
         return Datatables::of($loans)->editColumn('action', function ($loans) {
-            $button = '<a href="productCatalog/'.$loans->loanId.'/edit" class="inline-block mr-3 px-6 py-2.5 bg-green-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-green-600 hover:shadow-lg focus:bg-green-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-700 active:shadow-lg transition duration-150 ease-in-out">Edit <i class="fa fa-pencil" style="font-size:20px""></i></a>';
+            $button = '<a href="loan/'.$loans->loanId.'/edit" class="inline-block mr-3 px-6 py-2.5 bg-green-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-green-600 hover:shadow-lg focus:bg-green-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-700 active:shadow-lg transition duration-150 ease-in-out">Edit <i class="fa fa-pencil" style="font-size:20px""></i></a>';
             $button .='<a href="#delete-'.$loans->loanId.'" class="inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out" style="margin-right:10px"> Delete<i class="fa fa-trash-o" style="font-size:20px"></i></a>';
             return $button;
         })
