@@ -1,7 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+          @auth
          {{__("Welcome  " . "  " . Auth::user()->firstname) }} {{ Auth::user()->lastname }} 
+         @else
+           {{__("Welcome To Company Name") }}
+         @endif
+         
         </h2>
     </x-slot>
 

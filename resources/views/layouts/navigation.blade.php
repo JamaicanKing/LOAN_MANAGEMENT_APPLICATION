@@ -1,5 +1,5 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100" >
-
+    
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" >
         <div class="flex justify-between h-16" >
@@ -11,6 +11,8 @@
                     </a>
                 </div>
 
+                @auth
+
                 
                 
                 <!-- Navigation Links -->
@@ -19,18 +21,15 @@
                         {{ __('Home') }}
                     </x-nav-link>
                 </div>
-
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('roles.index')" :active="request()->routeIs('roles.index')">
-                        {{ __('Role') }}
-                    </x-nav-link>
-                </div>
+                @if(Auth::user()->hasRole('administrator') || Auth::user()->hasRole('superadministrator') )
+                
 
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('loanStatus.index')" :active="request()->routeIs('loanStatus.index')">
                         {{ __('Status') }}
                     </x-nav-link>
                 </div>
+                @endif
 
                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -58,7 +57,7 @@
                         </x-dropdown>
                     </div>
                 </div>
-
+                @if(Auth::user()->hasRole('administrator') || Auth::user()->hasRole('superadministrator') )
                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
@@ -79,10 +78,14 @@
                              <x-dropdown-link :href="route('staff.create')">
                                 {{ __('Add New Staff') }}
                              </x-dropdown-link>
+                             <x-dropdown-link :href="route('roles.index')">
+                                {{ __('Role') }}
+                             </x-dropdown-link>
         
                             </x-slot>
                         </x-dropdown>
                 </div>
+                @endif
             </div>
 
             <!-- Settings Dropdown -->
@@ -178,7 +181,19 @@
             </div>
         </div>
     </div>
+    @else
+                <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
+                    <div class="shrink-0 flex items-center">
+                        
+                    </div>
+                        <a href="{{ route('login') }}" class="text-sm text-gray-700 underline">Login</a>
 
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 underline">Register</a>
+                        @endif
+                  
+                </div>
+    @endif
 </nav>
 
 

@@ -1,3 +1,4 @@
+
 @yield('styling')
 <style>
     {
@@ -92,7 +93,6 @@
 </style>
 <x-app-layout>
 
-
     <x-slot name="header">
         <h1 class="font-bold text-xl text-blue-400 leading-tight">
             <center><b>{{ __('Loan Form') }}</b></center>
@@ -119,7 +119,7 @@
                                 class="block text-sm font-medium text-gray-700">{{ __('First Name') }}</label>
                             <input id="firstname" oninput="this.className = ''" type="text"
                                 class="form-control @error('firstname') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="firstname" value="{{ old('firstname') }}" autocomplete="firstname" autofocus>
+                                name="firstname" value="{{ $customerDetail[0]->firstname ?? ''  }}" autocomplete="firstname" autofocus>
 
                             @error('firstname')
                                 <span class="invalid-feedback" role="alert">
@@ -134,7 +134,7 @@
                                 class="block text-sm font-medium text-gray-700">{{ __('Last Name') }}</label>
                             <input id="lastname" oninput="this.className = ''" type="text"
                                 class="form-control @error('lastname') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="lastname" value="{{ old('lastname') }}" autocomplete="lastname" autofocus>
+                                name="lastname" value="{{ $customerDetail[0]->lastname ?? '' }}" autocomplete="lastname" autofocus>
 
                             @error('lastname')
                                 <span class="invalid-feedback" role="alert">
@@ -149,7 +149,7 @@
                                 class="block text-sm font-medium text-gray-700">{{ __('Email') }}</label>
                             <input id="email" oninput="this.className = ''" type="text"
                                 class="form-control @error('email') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="email" value="{{ old('emal') }}" autocomplete="email" autofocus>
+                                name="email" value="{{ $customerDetail[0]->email ?? '' }}" autocomplete="email" autofocus>
 
                             @error('email')
                                 <span class="invalid-feedback" role="alert">vendor
@@ -165,7 +165,7 @@
 
                             <input id="phone_number" oninput="this.className = ''" type="text"
                                 class="form-control @error('phone_number') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="phone_number" value="{{ old('phone_number') }}" autocomplete="phone_number"
+                                name="phone_number" value="{{ $customerDetail[0]->phone_number ?? '' }}" autocomplete="phone_number"
                                 autofocus>
 
                             @error('phone_number')
@@ -182,7 +182,7 @@
 
                             <input id="address" oninput="this.className = ''" type="text"
                                 class="form-control @error('address') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="address" value="{{ old('address') }}" autocomplete="address" autofocus>
+                                name="address" value="{{ $customerDetail[0]->address ?? '' }}" autocomplete="address" autofocus>
 
                             @error('address')
                                 <span class="invalid-feedback" role="alert">
@@ -197,7 +197,7 @@
 
                             <input id="street_address" oninput="this.className = ''" type="text"
                                 class="form-control @error('street_address') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="street_address" value="{{ old('street_address') }}"
+                                name="street_address" value="{{ $customerDetail[0]->street_address ?? '' }}"
                                 autocomplete="street_address" autofocus>
 
                             @error('street_address')
@@ -214,7 +214,7 @@
 
                             <input id="city" oninput="this.className = ''" type="text"
                                 class="form-control @error('city') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="city" value="{{ old('city') }}" autocomplete="city" autofocus>
+                                name="city" value="{{ $customerDetail[0]->city ?? '' }}" autocomplete="city" autofocus>
 
                             @error('city')
                                 <span class="invalid-feedback" role="alert">
@@ -229,7 +229,7 @@
 
                             <input id="state" oninput="this.className = ''" type="text"
                                 class="form-control @error('state') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="state" value="{{ old('state') }}" autocomplete="state" autofocus>
+                                name="state" value="{{ $customerDetail[0]->state ?? '' }}" autocomplete="state" autofocus>
 
                             @error('state')
                                 <span class="invalid-feedback" role="alert">
@@ -244,7 +244,7 @@
 
                             <input id="postal" oninput="this.className = ''" type="text"
                                 class="form-control @error('postal') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="postal" value="{{ old('postal') }}" autocomplete="postal" autofocus>
+                                name="postal" value="{{ $customerDetail[0]->postal ?? '' }}" autocomplete="postal" autofocus>
 
                             @error('postal')
                                 <span class="invalid-feedback" role="alert">
@@ -260,7 +260,7 @@
                             <input id="trn" oninput="this.className = ''" type="text" minlength="9" maxlength="9"
                                 pattern="{_}{_}{_}-{_}{_}{_}-{_}{_}{_}"
                                 class="form-control @error('trn') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="trn" value="{{ old('trn') }}" autocomplete="trn" autofocus>
+                                name="trn" value="{{ $customerDetail[0]->trn ?? '' }}" autocomplete="trn" autofocus>
 
                             @error('trn')
                                 <span class="invalid-feedback" role="alert">
@@ -288,7 +288,7 @@
 
                             <input id="identification_number" oninput="this.className = ''" type="text"
                                 class="form-control @error('identification_number') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="identification_number" value="{{ old('identification_number') }}"
+                                name="identification_number" value="{{ $customerDetail[0]->identification_number ?? '' }}"
                                 autocomplete="identification_number" autofocus>
 
                             @error('identification_number')
@@ -303,7 +303,7 @@
                                 class="block text-sm font-medium text-gray-700">{{ __('Identification Expiration ') }}</label>
                             <input oninput="this.className = ''" type="date" id="identification_expiration"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="identification_expiration">
+                                name="identification_expiration" value="{{ $customerDetail[0]->identification_expiration ?? '' }}">
                         </div>
                     </div>
                 </div>
@@ -317,7 +317,7 @@
 
                             <input id="contact_person_name" oninput="this.className = ''" type="text"
                                 class="form-control @error('contact_person_name') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="contact_person_name" value="{{ old('contact_person_name') }}"
+                                name="contact_person_name" value="{{ $customerDetail[0]->contact_person_name ?? '' }}"
                                 autocomplete="contact_person_name" autofocus>
                         </div>
 
@@ -327,7 +327,7 @@
 
                             <input id="contact_person_address" oninput="this.className = ''" type="text"
                                 class="form-control @error('contact_person_address') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="contact_person_address" value="{{ old('contact_person_address') }}"
+                                name="contact_person_address" value="{{ $customerDetail[0]->contact_person_address ?? '' }}"
                                 autocomplete="contact_person_address" autofocus>
 
                             @error('contact_person_address')
@@ -343,7 +343,7 @@
 
                             <input id="contact_person_number" oninput="this.className = ''" type="text"
                                 class="form-control @error('contact_person_number') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="contact_person_number" value="{{ old('contact_person_number') }}"
+                                name="contact_person_number" value="{{ $customerDetail[0]->contact_person_number ?? '' }}"
                                 autocomplete="contact_person_number" autofocus>
 
                             @error('contact_person_number')
@@ -359,7 +359,7 @@
 
                             <input id="kinship" oninput="this.className = ''" type="text"
                                 class="form-control @error('kinship') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="kinship" name="kinship" value="{{ old('kinship') }}" autocomplete="kinship"
+                                name="kinship" name="kinship" value="{{ $customerDetail[0]->kinship ?? '' }}" autocomplete="kinship"
                                 autofocus>
 
                             @error('kinship')
@@ -375,7 +375,7 @@
 
                             <input id="length_of_relationship" oninput="this.className = ''" type="text"
                                 class="form-control @error('length_of_relationship') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="length_of_relationship" value="{{ old('length_of_relationship') }}"
+                                name="length_of_relationship" value="{{ $customerDetail[0]->length_of_relationship ?? '' }}"
                                 autocomplete="length_of_relationship" autofocus>
 
                             @error('length_of_relationship')
@@ -397,7 +397,7 @@
 
                             <input id="name_of_employer" oninput="this.className = ''" type="text"
                                 class="form-control @error('name_of_employer') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="name_of_employer" value="{{ old('name_of_employer') }}"
+                                name="name_of_employer" value="{{ $customerDetail[0]->name_of_employer ?? '' }}"
                                 autocomplete="name_of_employer" autofocus>
 
                             @error('name_of_employer')
@@ -414,7 +414,7 @@
 
                             <input id="address_of_employer" oninput="this.className = ''" type="text"
                                 class="form-control @error('address_of_employer') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="address_of_employer" value="{{ old('address_of_employer') }}"
+                                name="address_of_employer" value="{{ $customerDetail[0]->address_of_employer ?? '' }}"
                                 autocomplete="address_of_employer" autofocus>
 
                             @error('address_of_employer')
@@ -431,7 +431,7 @@
 
                             <input id="position_held" oninput="this.className = ''" type="text"
                                 class="form-control @error('position_held') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="position_held" value="{{ old('position_held') }}" autocomplete="position_held"
+                                name="position_held" value="{{ $customerDetail[0]->position_held ?? '' }}" autocomplete="position_held"
                                 autofocus>
 
                             @error('position_held')
@@ -448,7 +448,7 @@
 
                             <input id="tenure" oninput="this.className = ''" type="text"
                                 class="form-control @error('tenure') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="tenure" value="{{ old('tenure') }}" autocomplete="tenure" autofocus>
+                                name="tenure" value="{{ $customerDetail[0]->tenure ?? '' }}" autocomplete="tenure" autofocus>
 
                             @error('tenure')
                                 <span class="invalid-feedback" role="alert">
@@ -692,12 +692,12 @@
             // A loop that checks every input field in the current tab:
             for (i = 0; i < y.length; i++) {
                 // If a field is empty...
-                /*if (y[i].value == "" && y[i].id != "maintainace_branch" && y[i].id != "name_on_account" && y[i].id != "account_number" && y[i].id != "account_type") {
+                if (y[i].value == "" && y[i].id != "maintainace_branch" && y[i].id != "name_on_account" && y[i].id != "account_number" && y[i].id != "account_type") {
                    // add an "invalid" class to the field:
                    y[i].className += " invalid";
                     // and set the current valid status to false
                     valid = false;
-                }*/
+                }
             }
             
                 if(y["cycle_weekly"]  && document.querySelector('#cycle_weekly:checked') !== null || y["cycle_monthly"] && document.querySelector('#cycle_monthly:checked') !== null ||  y["cycle_fortnightly"] && document.querySelector('#cycle_fortnightly:checked') !== null ){

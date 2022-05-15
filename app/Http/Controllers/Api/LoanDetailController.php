@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\LoanDetail;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+
 
 class LoanDetailController extends Controller
 {
@@ -14,16 +16,43 @@ class LoanDetailController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $loans = LoanDetail::getAllLoans();
-        return Datatables::of($loans)->editColumn('action', function ($loans) {
-            $button = '<a href="loan/'.$loans->loanId.'/edit" class="inline-block mr-3 px-6 py-2.5 bg-green-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-green-600 hover:shadow-lg focus:bg-green-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-700 active:shadow-lg transition duration-150 ease-in-out">Edit <i class="fa fa-pencil" style="font-size:20px""></i></a>';
-            $button .='<a href="#delete-'.$loans->loanId.'" class="inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out" style="margin-right:10px"> Delete<i class="fa fa-trash-o" style="font-size:20px"></i></a>';
-            return $button;
-        })
-        ->rawColumns(['action' => 'action'])
-        ->make(true);
+    public function index(Request $request)
+    {   
+
+          
+        if(Auth::user()->hasRole('superadministrator')){
+            $loans = LoanDetail::getAllLoans();
+
+            return Datatables::of($loans)->editColumn('action', function ($loans) {
+
+
+            })
+            ->addColumn('actions', function($loans){
+                $editUrl = route('loan.edit', $loans->loanId);
+                $deleteUrl = route('loan.destroy', $loans->loanId);
+                $paymentUrl = route('payment.index',['id' => $loans->loanId]);
+            
+                return view('actions', compact('paymentUrl','editUrl', 'deleteUrl'));
+            })
+            ->rawColumns(['action' => 'action'])
+            ->make(true);
+            
+        }else{
+           $loans = LoanDetail::getLoanByUserId(Auth::user()->id); 
+            return Datatables::of($loans)->editColumn('action', function ($loans) {
+                
+
+            })
+            ->addColumn('actions', function($loans){
+                $editUrl = route('loan.edit', $loans->loanId);
+                $deleteUrl = route('loan.destroy', $loans->loanId);
+                $paymentUrl = route('payment.index',['id' => $loans->loanId]);
+            
+                return view('actions', compact('paymentUrl','editUrl', 'deleteUrl'));
+            })
+            ->rawColumns(['action' => 'action'])
+            ->make(true);
+        }   
     }
 
     /**

@@ -18,15 +18,40 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         $this->call(LaratrustSeeder::class);
 
-        DB::table('users')->insert([
+        $user = DB::table('users')->insert([
             'firstname' => "Gerald",
             'lastname' => "Collins",
             'email' => "gerald.collins@newcom.com",
             'password' => Hash::make('password'),
         ]);
+        
+        if($user){
+            $role = DB::table('role_user')->insert([
+                'role_id' => 1,
+                'user_id' => 1,
+                'user_type' => 'App\Models\User',
+            ]);
+        }
+
 
         DB::table('loan_statuses')->insert([
             'status' => "Open",
+        ]);
+
+        DB::table('loan_statuses')->insert([
+            'status' => "Current",
+        ]);
+
+        DB::table('loan_statuses')->insert([
+            'status' => "Declined",
+        ]);
+
+        DB::table('loan_statuses')->insert([
+            'status' => "Fully Paid",
+        ]);
+
+        DB::table('loan_statuses')->insert([
+            'status' => "Partially Paid",
         ]);
 
         DB::table('interest_rates')->insert([

@@ -14,13 +14,14 @@ class CreateCustomerDetailsTable extends Migration
     public function up()
     {
         Schema::create('customer_details', function (Blueprint $table) {
+            $table->id();
             $table->bigInteger('user_id')->unsigned()->unique();
             $table->decimal('phone_number',11,0);
             $table->string('address');
             $table->string('street_address');
             $table->string('city');
-            $table->string('state/province');
-            $table->string('postal/zip_code');
+            $table->string('state');
+            $table->string('postal');
             $table->decimal('trn',9,0);
             $table->binary('identification');
             $table->string('identification_number');

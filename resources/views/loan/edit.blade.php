@@ -1,34 +1,33 @@
-@json($loan)
 @yield('styling')
 <style>
     .links {
-    overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
     }
 
     /* Style the buttons that are used to open the tab content */
     .links button {
-    background-color: inherit;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
     }
 
     /* Change background color of buttons on hover */
     .links button:hover {
-    background-color: #ddd;
+        background-color: #ddd;
     }
 
     /* Create an active/current tablink class */
     .links button.active {
-    background-color: #ccc;
+        background-color: #ccc;
     }
-   
-    *{
+
+    * {
         box-sizing: border-box;
     }
 
@@ -58,9 +57,9 @@
         border: 1px solid #aaaaaa;
     }
 
-    #reject{
+    #reject {
         background-color: red;
-        
+
     }
 
     /* Mark input boxes that gets an error on validation: */
@@ -83,7 +82,7 @@
         cursor: pointer;
 
     }
-    
+
 
     button:hover {
         opacity: 0.8;
@@ -91,7 +90,7 @@
 
 
     /* Make circles that indicate the steps of the form: */
-   .step {
+    .step {
         height: 15px;
         width: 15px;
         margin: 0 2px;
@@ -129,7 +128,8 @@
         </div>
     @endif
 
-    <form method="POST" id="regForm"  action="{{ route('loan.update',['loan' => $loan[0]->loanId]) }}" enctype="multipart/form-data">
+    <form method="POST" id="regForm" action="{{ route('loan.update', ['loan' => $loan[0]->loanId]) }}"
+        enctype="multipart/form-data">
         @method('PUT')
         @csrf
         <div class="shadow overflow-hidden sm:rounded-md">
@@ -296,11 +296,14 @@
                             <div class="image-upload">
                                 <label for="identification"
                                     class="block text-sm font-medium text-gray-700">{{ __('INSERT IDENTIFICATION HERE') }}</label>
-                                <img src="data:image;base64, " alt="Image" />
+                                <img src="data:image;base64, {{ base64_encode($loan[0]->identification) }}"
+                                    alt="Image" width="400px" height="800px" />
+
 
 
                                 <div>
-                                    <input type="file" oninput="this.className = ''" id="file" name="file">
+                                    <input multiple="multiple" type="file" class="fileupload-input"
+                                        oninput="this.className = ''" id="file" name="file">
                                 </div>
                             </div>
                         </div>
@@ -455,8 +458,8 @@
 
                             <input id="position_held" oninput="this.className = ''" type="text"
                                 class="form-control @error('position_held') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="position_held" value="{{ $loan[0]->position_held }}" autocomplete="position_held"
-                                autofocus>
+                                name="position_held" value="{{ $loan[0]->position_held }}"
+                                autocomplete="position_held" autofocus>
 
                             @error('position_held')
                                 <span class="invalid-feedback" role="alert">
@@ -519,32 +522,55 @@
                         </div>
 
                         <div class="col-span-6 sm:col-span-2">
-                            <label for="repayment_cycle" class="block text-sm font-medium text-gray-700">{{ __('Repayment Cycle') }}</label>
-                        
+                            <label for="repayment_cycle"
+                                class="block text-sm font-medium text-gray-700">{{ __('Repayment Cycle') }}</label>
+
                             <div class="col-span-2 sm:col-span-2">
-                                <select class="dropdown-toggle inline-block px-7 py-2.5 bg-purple-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg active:text-white transition duration-150 ease-in-out flex items-center whitespace-nowrap" aria-label="Default select example" name="repayment_cycle" id="repayment_cycle"  for="repayment_cycle" >
-                                    <option value="">{{ $loan[0]->repayment_cycle }}</option>
-                                    <option value="weekly">{{ __("Weekly") }}</option>
-                                    <option value="fortnightly">{{ __("Fortnightly") }}</option>
-                                    <option value="monthly">{{ __("Monthly") }}</option>
+                                <select
+                                    class="dropdown-toggle inline-block px-7 py-2.5 bg-purple-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg active:text-white transition duration-150 ease-in-out flex items-center whitespace-nowrap"
+                                    aria-label="Default select example" name="repayment_cycle" id="repayment_cycle"
+                                    for="repayment_cycle">
+                                    <option value="{{ $loan[0]->repayment_cycle }}">
+                                        {{ $loan[0]->repayment_cycle }}</option>
+                                    <option value="weekly">{{ __('Weekly') }}</option>
+                                    <option value="fortnightly">{{ __('Fortnightly') }}</option>
+                                    <option value="monthly">{{ __('Monthly') }}</option>
                                 </select>
                             </div>
 
                         </div>
 
                         <div class="col-span-6 sm:col-span-3">
-                            <label for="received_method" class="block text-sm font-medium text-gray-700">{{ __('Method in which you would like to receive loan?') }}</label>
-                        
+                            <label for="received_method"
+                                class="block text-sm font-medium text-gray-700">{{ __('Method in which you would like to receive loan?') }}</label>
+
                             <div class="col-span-2 sm:col-span-2">
-                                <select class="dropdown-toggle inline-block px-7 py-2.5 bg-purple-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg active:text-white transition duration-150 ease-in-out flex items-center whitespace-nowrap" aria-label="Default select example"  onchange="showHideBankingInfo(this.value)" name="received_method" id="received_method"  for="received_method" onchange="showHideBankingInfo(this.value)" name="received_method" id="received_method"  for="received_method" >
-                                    <option value="">{{ $loan[0]->receive_method }}</option>
-                                    <option value="Cash In Hand">{{ __("Cash In Hand") }}</option>
-                                    <option value="Bank Tranfer">{{ __("Bank Transfer") }}</option>
+                                <select
+                                    class="dropdown-toggle inline-block px-7 py-2.5 bg-purple-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg active:text-white transition duration-150 ease-in-out flex items-center whitespace-nowrap"
+                                    aria-label="Default select example" onchange="showHideBankingInfo(this.value)"
+                                    name="received_method" id="received_method" for="received_method"
+                                    onchange="showHideBankingInfo(this.value)" name="received_method"
+                                    id="received_method" for="received_method">
+                                    <option value="{{ $loan[0]->receive_method }}">{{ $loan[0]->receive_method }}
+                                    </option>
+                                    <option value="Cash In Hand">{{ __('Cash In Hand') }}</option>
+                                    <option value="Bank Tranfer">{{ __('Bank Transfer') }}</option>
                                 </select>
                             </div>
 
 
                         </div>
+
+                        @if(Auth::user()->hasRole('administrator') || Auth::user()->hasRole('superadministrator') )
+                        <div class="col-span-6 sm:col-span-2">
+                            <label for="interest_start_date"
+                                class="block text-sm font-medium text-gray-700">{{ __('Loan Release Date') }}</label>
+                            <input oninput="this.className = ''" type="date" id="interest_start_date"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                name="interest_start_date" value="{{ $loan[0]->interest_start_date }}"
+                                autocomplete="interest_start_date" autofocus>
+                        </div>
+                        @endif
                         <div id="bankingInfo" class="col-span-6">
                             <div class="col-span-6 sm:col-span-6">
                                 <label for="maintainace_branch"
@@ -611,11 +637,9 @@
                             </div>
                         </div>
                         <div class="col-span-6 sm:col-span-6">
-                            <label for="exampleFormControlTextarea1" class="form-label inline-block mb-2 text-gray-700"
-                              >Special Notes</label
-                            >
-                            <textarea
-                              class="
+                            <label for="exampleFormControlTextarea1"
+                                class="form-label inline-block mb-2 text-gray-700">Special Notes</label>
+                            <textarea class="
                                 form-control
                                 block
                                 w-full
@@ -633,10 +657,8 @@
                                 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
                                 sm:col-span-6
                               "
-                              id="notes"
-                                name="note"
-                              placeholder="Your message to us"
-                            >{{ $loan[0]->note }}</textarea>
+                                id="notes" name="note"
+                                placeholder="Your message to us">{{ $loan[0]->note }}</textarea>
                         </div>
 
                         <input id=status name="status" type="hidden" value="">
@@ -644,29 +666,40 @@
 
                     </div>
                 </div>
-                
+
             </div>
             <div class="links">
-                <button type='button' class="tablinks" onclick="openForm(event, 'personal_info')">Personal Information</button>
-                <button type='button'class="tablinks" onclick="openForm(event, 'contact_person_info')">Contact Perosn Information</button>
-                <button type='button'class="tablinks" onclick="openForm(event, 'employment_info')">Employment Information</button>
-                <button type='button' class="tablinks" onclick="openForm(event, 'loan_info')">Loan Information</button>  
+                <button type='button' class="tablinks" onclick="openForm(event, 'personal_info')">Personal
+                    Information</button>
+                <button type='button' class="tablinks" onclick="openForm(event, 'contact_person_info')">Contact
+                    Perosn Information</button>
+                <button type='button' class="tablinks" onclick="openForm(event, 'employment_info')">Employment
+                    Information</button>
+                <button type='button' class="tablinks" onclick="openForm(event, 'loan_info')">Loan
+                    Information</button>
+
+                    @if(Auth::user()->hasRole('administrator') || Auth::user()->hasRole('superadministrator') )
                 <div class="container">
 
-                    <button type='button' onclick="rejectApplication()" id="rejected" style=" background-color: red; float:right; margin-left:5px; margin-top: 2px; "class="inline-block px-6 py-2.5 inset-y-0 right-0 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded-full shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out">
+                    <button type='button' onclick="rejectApplication()" id="rejected"
+                        style=" background-color: red; float:right; margin-left:5px; margin-top: 2px; "
+                        class="inline-block px-6 py-2.5 inset-y-0 right-0 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded-full shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out">
                         Reject
                     </button>
 
-                    <button type='button' onclick="approveApplication()" id="Approved" style=" background-color: green; float:right; margin-top: 2px;" class="inline-block px-6 py-2.5 inset-y-0 right-0 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded-full shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out" >
+                    <button type='button' onclick="approveApplication()" id="Approved"
+                        style=" background-color: green; float:right; margin-top: 2px;"
+                        class="inline-block px-6 py-2.5 inset-y-0 right-0 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded-full shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out">
                         Approved
                     </button>
-                </div>   
+                </div>
+                @endif
             </div>
-            
 
-        
 
-        <!--<button type="button" id="prevBtn"
+
+
+            <!--<button type="button" id="prevBtn"
             class="inline-block px-6 py-2.5 bg-gray-200 text-black font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-400 active:shadow-lg transition duration-150 ease-in-out"
             onclick="nextPrev(-1)">Previous</button>
 
@@ -675,16 +708,13 @@
             onclick="nextPrev(1)">Next</button>
 
          Circles which indicates the steps of the form: -->
-        
+
 
     </form>
 
 </x-app-layout>
 @section('java')
     <script>
-
-        
-
         var currentTab = 0; // Current tab is set to be the first tab (0)
         showTab(currentTab); // Display the current tab
 
@@ -696,17 +726,17 @@
         }
 
         function openForm(evt, sectionName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tab");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById(sectionName).style.display = "block";
-        evt.currentTarget.className += " active";
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(sectionName).style.display = "block";
+            evt.currentTarget.className += " active";
         }
 
         function validateForm() {
@@ -717,7 +747,8 @@
             // A loop that checks every input field in the current tab:
             for (i = 0; i < y.length; i++) {
                 // If a field is empty...
-                if (y[i].value == "" && y[i].id != "maintainace_branch" && y[i].id != "name_on_account" && y[i].id != "account_number" && y[i].id != "account_type") {
+                if (y[i].value == "" && y[i].id != "maintainace_branch" && y[i].id != "name_on_account" && y[i].id !=
+                    "account_number" && y[i].id != "account_type") {
                     // add an "invalid" class to the field:
                     y[i].className += " invalid";
                     // and set the current valid status to false
@@ -731,7 +762,7 @@
             return valid; // return the valid status
 
             if (valid) {
-              document.getElementsByClassName("tablinks")[currentTab].className += " finish";
+                document.getElementsByClassName("tablinks")[currentTab].className += " finish";
             }
             return valid;
         }
@@ -746,30 +777,30 @@
             x[n].className += " active";
         }
 
-        function showHideBankingInfo(value){
+        function showHideBankingInfo(value) {
             var x = document.getElementById("bankingInfo");
-            
-            if(value ==  "Cash In Hand"){
+
+            if (value == "Cash In Hand") {
                 x.style.display = "none";
-            }else{
+            } else {
                 x.style.display = "block";
             }
         }
 
-        function rejectApplication(){
+        function rejectApplication() {
 
             var x = document.getElementById("status");
             x.value = 3;
-            document.forms['regForm'].action = "{{ route('loan.update',['loan' => $loan[0]->loanId]) }}";
+            document.forms['regForm'].action = "{{ route('loan.update', ['loan' => $loan[0]->loanId]) }}";
             document.forms['regForm'].submit();
 
         }
 
-        function approveApplication(){
+        function approveApplication() {
 
-        var x = document.getElementById("status");
-        x.value = 4;
-        document.forms['regForm'].action = "{{ route('loan.update',['loan' => $loan[0]->loanId]) }}";
+            var x = document.getElementById("status");
+            x.value = 2;
+            document.forms['regForm'].action = "{{ route('loan.update', ['loan' => $loan[0]->loanId]) }}";
             document.forms['regForm'].submit();
         }
     </script>

@@ -19,6 +19,7 @@ class CreateLoanDetailsTable extends Migration
             $table->decimal('loan_amount',10,2);
             $table->bigInteger('interest_rate_id')->unsigned();
             $table->date('interest_start_date')->nullable();
+            $table->date('due_date')->nullable();
             $table->string('loan_amount_string');
             $table->decimal('balance');
             $table->string('receive_method');
@@ -32,6 +33,7 @@ class CreateLoanDetailsTable extends Migration
             $table->string('note')->nullable();
             $table->bigInteger('created_by');
             $table->bigInteger('updated_by')->nullable();
+            $table->enum('status', ['INACTIVE', 'Active']);
             $table->timestamps();
 
             $table->foreign('user_id')

@@ -10,8 +10,11 @@ use App\Models\CustomerEmploymentDetail;
 use App\Models\InterestRate;
 use App\Models\LoanStatuses;
 use Exception;
+use App\Models\User;
+use App\Models\RoleUser;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LoanDetailController extends Controller
 {
@@ -20,10 +23,11 @@ class LoanDetailController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $loanDetails = LoanDetail::getAllLoans();
-        return view('loan.index',['loanDetails' => $loanDetails]);
+        
+        return view('loan.index');
+  
     }
 
     /**
@@ -33,7 +37,8 @@ class LoanDetailController extends Controller
      */
     public function create()
     {
-        return view('loan.create');
+        $customerDetails = CustomerDetail::getCustomerDetailsByUserId(Auth::user()->id);
+        return view('loan.create',['customerDetail' => $customerDetails]);
     }
 
     /**
@@ -66,7 +71,7 @@ class LoanDetailController extends Controller
             'state' => $request->input('state'),
             'postal' => $request->input('postal'),
             'trn' => $request->input('trn'),
-            'identification' => $request->file('file')->path(),
+            'identification' => file_get_contents($request->file('file')->path()),
             'identification_number' => $request->input('identification_number'),
             'identification_expiration' => $request->input('identification_expiration'),
             'contact_person_name' => $request->input('contact_person_name'),
@@ -96,6 +101,7 @@ class LoanDetailController extends Controller
                 'maintainace_branch' => $request->input('maintainace_branch'),
                 'balance' => $balance,
                 'name_on_account' => $request->input('name_on_account'),
+                'account_number' => $request->input('account_number'),
                 'repayment_cycle' => $request->input('repayment_cycle'),
                 'account_type' => $request->input('account_type'),
                 'note' => $request->input('note'),
@@ -105,7 +111,7 @@ class LoanDetailController extends Controller
         }
 
         if($LoanDetails){
-            return redirect()->route('loan.index')->with('status', 'Status Successfully added');
+            return redirect()->route('loan.index')->with('status', 'Your Loan Application has successfully been submitted');
         }else{
             return redirect()->route('loan.index')->with('status','Loan Application submission was unsuccessful');
         }
@@ -130,7 +136,11 @@ class LoanDetailController extends Controller
      */
     public function edit($id)
     {
-        $loan = LoanDetail::getLoanById($id);
+        if(Auth::user()->hasRole('superadministrator') || Auth::user()->hasRole('administrator')){
+            $loan = LoanDetail::getLoanById($id);
+        }else{
+        $loan = LoanDetail::getLoanByUserIdAndLoanId($id);
+        }
         return view('loan.edit',['loan' => $loan]);
     }
 
@@ -143,7 +153,19 @@ class LoanDetailController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($request);
+        
+        if($request->input('repayment_cycle') == 'monthly'){
+            $dueDate = date('Y-m-d',strtotime($request->input('interest_start_date'). ' + 30 days'));
+        }elseif($request->input('repayment_cycle') == 'weekly'){
+            $dueDate = date('Y-m-d',strtotime($request->input('interest_start_date'). ' + 7 days'));
+        }elseif($request->input('repayment_cycle') == 'fortnightly'){
+            $dueDate = date('Y-m-d',strtotime($request->input('interest_start_date'). ' + 14 days'));
+        }
+        if($request->hasFile('file')){
+            $identification = file_get_contents($request->file('file')->path());
+        }else {
+            $identification = '';
+        }
         $statuses = LoanStatuses::getAllStatuses();
         $interestrates = InterestRate::getAllRates();
         $interestRate = 0;
@@ -165,7 +187,6 @@ class LoanDetailController extends Controller
                                 'state' => $request->input('state'),
                                 'postal' => $request->input('postal'),
                                 'trn' => $request->input('trn'),
-                                //'identification' => $request->file('file')->path(),
                                 'identification_number' => $request->input('identification_number'),
                                 'identification_expiration' => $request->input('identification_expiration'),
                                 'contact_person_name' => $request->input('contact_person_name'),
@@ -187,12 +208,12 @@ class LoanDetailController extends Controller
                     ->where('id','=',"$id")
                     ->update(
                         [
-                        //'interest_rate_id' => $interestRate,
+                        'interest_start_date' => $request->input('interest_start_date'),
                         'loan_amount' => $request->input('loan_amount'),
                         'loan_amount_string' => $request->input('loan_amount_string'),
                         'receive_method' => $request->input('received_method'),
                         'maintainace_branch' => $request->input('maintainace_branch'),
-                        //'balance' => $balance,
+                        'due_date' => $dueDate,
                         'name_on_account' => $request->input('name_on_account'),
                         'account_type' => $request->input('account_type'),
                         'note' => $request->input('note'),
@@ -201,11 +222,7 @@ class LoanDetailController extends Controller
                         'repayment_cycle' => $request->input('repayment_cycle'),
                     ]);
 
-        if($LoanDetails){
             return redirect()->route('loan.index')->with('status', 'Status Successfully updated');
-        }else{
-            return redirect()->route('loan.index')->with('status','Unable to update Loan Information');
-        }
     }
 
     /**
@@ -216,6 +233,22 @@ class LoanDetailController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $loan = LoanDetail::find($id);
+        $loan->status = 'INACTIVE';
+
+        return redirect()->route('loan.index')->with('status','Payment Information Deleted');
     }
+
+    public function downloadPDF(){
+        $user = DB::select("Select
+        cd.identification 
+        From customer_details cd 
+        inner join users on cd.user_id = users.id 
+        where cd.user_id = 1");
+        //dd($user);
+        //$pdf = PDF::loadView('pdf', compact('user'));
+        $filePath = storage_path() . DIRECTORY_SEPARATOR .'hello world.html';
+        return PDF::loadFile($filePath)->save($user)->stream('download.pdf');
+  
+      }
 }

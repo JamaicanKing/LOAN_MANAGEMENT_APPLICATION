@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Exception;
-use PhpParser\Node\Expr\AssignOp\Concat;
-use PhpParser\Node\Expr\BinaryOp\Concat as BinaryOpConcat;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class LoanDetail extends Model
@@ -31,6 +31,7 @@ class LoanDetail extends Model
         'bank_id', 
         'maintainace_branch',
         'balance',
+        'due_date',
         'loan_status_id',
         'repayment_cycle',
         'name_on_account',
@@ -48,17 +49,56 @@ class LoanDetail extends Model
         try{
             $loanDetails = DB::table('loan_details as ld')
             ->join('users','ld.user_id','=','users.id')
+            ->join('customer_details as cd','users.id','=','cd.user_id')
+            ->join('customer_employment_details as cmd','users.id','=','cmd.user_id')
             ->join('interest_rates as ir','ld.interest_rate_id',"=",'ir.id')
             ->join('loan_statuses as ls','ld.loan_status_id','=','ls.id')
             ->select(
                     [
-                    'ld.id as loanId',
-                    DB::raw("concat(users.firstname  ,' ',users.lastname) as name"),
-                    'ir.rate',
-                    'ld.interest_start_date',
-                    'loan_amount',
-                    'receive_method',
-                    'ls.status'
+                        'ld.id as loanId',
+                        'users.id as client_id',
+                        'due_date',
+                        'users.firstname',
+                        DB::raw("concat(users.firstname  ,' ',users.lastname) as name"),
+                        'users.lastname',
+                        'users.email',
+                        'cd.phone_number',
+                        'cd.address',
+                        'cd.street_address',
+                        'cd.city',
+                        'ls.status',
+                        'cd.state as state',
+                        'cd.postal as postal',
+                        'cd.trn',
+                        'cd.identification',
+                        'cd.identification_number',
+                        'cd.identification_expiration',
+                        'cd.contact_person_name',
+                        'cd.contact_person_address',
+                        'cd.contact_person_number',
+                        'cd.kinship',
+                        'cd.length_of_relationship',
+                        'cmd.name_of_employer',
+                        'cmd.address_of_employer',
+                        'cmd.position_held',
+                        'cmd.tenure',
+                        'ir.rate',
+                        'interest_start_date',
+                        'loan_amount',
+                        'loan_amount_string',
+                        'balance',
+                        'maintainace_branch',
+                        'name_on_account',
+                        'account_number',
+                        'account_type',
+                        'loan_status_id',
+                        'number_of_repayments',
+                        'repayment_cycle',
+                        'note',
+                        'ld.updated_by',
+                        'ld.created_at',
+                        'ld.updated_at',
+                        'receive_method'
                     ])->get();
         }
         catch(Exception $error){
@@ -70,6 +110,74 @@ class LoanDetail extends Model
     }
 
     static function getLoanById($id){
+        
+        $loanDetails = new Collection();
+
+        try{
+            $loanDetails = DB::table('loan_details as ld')
+            ->join('users','ld.user_id','=','users.id')
+            ->join('customer_details as cd','users.id','=','cd.user_id')
+            ->join('customer_employment_details as cmd','users.id','=','cmd.user_id')
+            ->join('interest_rates as ir','ld.interest_rate_id',"=",'ir.id')
+            ->join('loan_statuses as ls','ld.loan_status_id','=','ls.id')
+            ->where("ld.id",'=',"$id")
+            ->select(
+                    [
+                        'ld.id as loanId',
+                        'users.id as client_id',
+                        'due_date',
+                        'users.firstname',
+                        DB::raw("concat(users.firstname  ,' ',users.lastname) as name"),
+                        'users.lastname',
+                        'users.email',
+                        'cd.phone_number',
+                        'cd.address',
+                        'cd.street_address',
+                        'cd.city',
+                        'ls.status',
+                        'cd.state as state',
+                        'cd.postal as postal',
+                        'cd.trn',
+                        'cd.identification',
+                        'cd.identification_number',
+                        'cd.identification_expiration',
+                        'cd.contact_person_name',
+                        'cd.contact_person_address',
+                        'cd.contact_person_number',
+                        'cd.kinship',
+                        'cd.length_of_relationship',
+                        'cmd.name_of_employer',
+                        'cmd.address_of_employer',
+                        'cmd.position_held',
+                        'cmd.tenure',
+                        'ir.rate',
+                        'interest_start_date',
+                        'loan_amount',
+                        'loan_amount_string',
+                        'balance',
+                        'maintainace_branch',
+                        'name_on_account',
+                        'account_number',
+                        'account_type',
+                        'loan_status_id',
+                        'number_of_repayments',
+                        'repayment_cycle',
+                        'note',
+                        'ld.updated_by',
+                        'ld.created_at',
+                        'ld.updated_at',
+                        'receive_method'
+                    ])->get();
+        }
+        catch(Exception $error){
+            Log::error("Error trying to roles from roles Table" . $error->getMessage());
+        }
+        
+        return $loanDetails;
+
+    }
+
+    static function getLoanByUserId($id){
 
         $loanDetails = new Collection();
 
@@ -79,50 +187,123 @@ class LoanDetail extends Model
             ->join('customer_details as cd','users.id','=','cd.user_id')
             ->join('customer_employment_details as cmd','users.id','=','cmd.user_id')
             ->join('interest_rates as ir','ld.interest_rate_id',"=",'ir.id')
+            ->join('loan_statuses as ls','ld.loan_status_id','=','ls.id')
+            ->where("users.id",'=',"$id")
+            ->select(
+                    [
+                        'ld.id as loanId',
+                        'users.id as client_id',
+                        'due_date',
+                        'users.firstname',
+                        DB::raw("concat(users.firstname  ,' ',users.lastname) as name"),
+                        'users.lastname',
+                        'users.email',
+                        'cd.phone_number',
+                        'cd.address',
+                        'cd.street_address',
+                        'cd.city',
+                        'ls.status',
+                        'cd.state as state',
+                        'cd.postal as postal',
+                        'cd.trn',
+                        'cd.identification',
+                        'cd.identification_number',
+                        'cd.identification_expiration',
+                        'cd.contact_person_name',
+                        'cd.contact_person_address',
+                        'cd.contact_person_number',
+                        'cd.kinship',
+                        'cd.length_of_relationship',
+                        'cmd.name_of_employer',
+                        'cmd.address_of_employer',
+                        'cmd.position_held',
+                        'cmd.tenure',
+                        'ir.rate',
+                        'interest_start_date',
+                        'loan_amount',
+                        'loan_amount_string',
+                        'balance',
+                        'maintainace_branch',
+                        'name_on_account',
+                        'account_number',
+                        'account_type',
+                        'loan_status_id',
+                        'number_of_repayments',
+                        'repayment_cycle',
+                        'note',
+                        'ld.updated_by',
+                        'ld.created_at',
+                        'ld.updated_at',
+                        'receive_method'
+                    ])->get();
+        }
+        catch(Exception $error){
+            Log::error("Error trying to roles from roles Table" . $error->getMessage());
+        }
+        
+        return $loanDetails;
+
+    }
+
+    static function getLoanByUserIdAndLoanId($id){
+
+        $loanDetails = new Collection();
+
+        try{
+            $loanDetails = DB::table('loan_details as ld')
+            ->join('users','ld.user_id','=','users.id')
+            ->join('customer_details as cd','users.id','=','cd.user_id')
+            ->join('customer_employment_details as cmd','users.id','=','cmd.user_id')
+            ->join('interest_rates as ir','ld.interest_rate_id',"=",'ir.id')
+            ->join('loan_statuses as ls','ld.loan_status_id','=','ls.id')
+            ->where("users.id",'=',Auth::user()->id)
             ->where("ld.id",'=',"$id")
             ->select(
                     [
-                    'ld.id as loanId',
-                    'users.id as client_id',
-                    'users.firstname',
-                    'users.lastname',
-                    'users.email',
-                    'cd.phone_number',
-                    'cd.address',
-                    'cd.street_address',
-                    'cd.city',
-                    'cd.state as state',
-                    'cd.postal as postal',
-                    'cd.trn',
-                    'cd.identification',
-                    'cd.identification_number',
-                    'cd.identification_expiration',
-                    'cd.contact_person_name',
-                    'cd.contact_person_address',
-                    'cd.contact_person_number',
-                    'cd.kinship',
-                    'cd.length_of_relationship',
-                    'cmd.name_of_employer',
-                    'cmd.address_of_employer',
-                    'cmd.position_held',
-                    'cmd.tenure',
-                    'ir.rate',
-                    'interest_start_date',
-                    'loan_amount',
-                    'loan_amount_string',
-                    'balance',
-                    'maintainace_branch',
-                    'name_on_account',
-                    'account_number',
-                    'account_type',
-                    'loan_status_id',
-                    'number_of_repayments',
-                    'repayment_cycle',
-                    'note',
-                    'ld.updated_by',
-                    'ld.created_at',
-                    'ld.updated_at',
-                    'receive_method'
+                        'ld.id as loanId',
+                        'users.id as client_id',
+                        'due_date',
+                        'users.firstname',
+                        DB::raw("concat(users.firstname  ,' ',users.lastname) as name"),
+                        'users.lastname',
+                        'users.email',
+                        'cd.phone_number',
+                        'cd.address',
+                        'cd.street_address',
+                        'cd.city',
+                        'ls.status',
+                        'cd.state as state',
+                        'cd.postal as postal',
+                        'cd.trn',
+                        'cd.identification',
+                        'cd.identification_number',
+                        'cd.identification_expiration',
+                        'cd.contact_person_name',
+                        'cd.contact_person_address',
+                        'cd.contact_person_number',
+                        'cd.kinship',
+                        'cd.length_of_relationship',
+                        'cmd.name_of_employer',
+                        'cmd.address_of_employer',
+                        'cmd.position_held',
+                        'cmd.tenure',
+                        'ir.rate',
+                        'interest_start_date',
+                        'loan_amount',
+                        'loan_amount_string',
+                        'balance',
+                        'maintainace_branch',
+                        'name_on_account',
+                        'account_number',
+                        'account_type',
+                        'loan_status_id',
+                        'number_of_repayments',
+                        'repayment_cycle',
+                        'note',
+                        'ld.updated_by',
+                        'ld.created_at',
+                        'ld.updated_at',
+                        'receive_method'
                     ])->get();
         }
         catch(Exception $error){
