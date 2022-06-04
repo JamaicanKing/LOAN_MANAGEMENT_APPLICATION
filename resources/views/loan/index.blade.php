@@ -71,7 +71,7 @@
                                     id="col3_smart" checked="checked"></td>
                         </tr>
                         <tr id="filter_col5" data-column="4">
-                            <td scope="col" style="text-align: center;">Column - Loan Release Date</td>
+                            <td scope="col" style="text-align: center;">Column - Balance</td>
                             <td scope="col" style="text-align: center;"><input type="text" class="column_filter"
                                     id="col4_filter"></td>
                             <td scope="col" style="text-align: center;"><input type="checkbox" class="column_filter"
@@ -80,14 +80,44 @@
                                     id="col4_smart" checked="checked"></td>
                         </tr>
                         <tr id="filter_col5"
-                            data-column="5                                                                                        ">
-                            <td scope="col" style="text-align: center;">Column - Status</td>
+                            data-column="5">                                                                                     
+                            <td scope="col" style="text-align: center;">Column - Paid Amount</td>
                             <td scope="col" style="text-align: center;"><input type="text" class="column_filter"
                                     id="col4_filter"></td>
                             <td scope="col" style="text-align: center;"><input type="checkbox" class="column_filter"
                                     id="col4_regex"></td>
                             <td scope="col" style="text-align: center;"><input type="checkbox" class="column_filter"
                                     id="col4_smart" checked="checked"></td>
+                        </tr>
+                         <tr id="filter_col6"
+                            data-column="6">                                                                                       
+                            <td scope="col" style="text-align: center;">Column - Loan Release Date</td>
+                            <td scope="col" style="text-align: center;"><input type="text" class="column_filter"
+                                    id="col6_filter"></td>
+                            <td scope="col" style="text-align: center;"><input type="checkbox" class="column_filter"
+                                    id="col6_regex"></td>
+                            <td scope="col" style="text-align: center;"><input type="checkbox" class="column_filter"
+                                    id="col6_smart" checked="checked"></td>
+                        </tr> 
+                        <tr id="filter_col7"
+                            data-column="7">                                                                                        
+                            <td scope="col" style="text-align: center;">Column - Due Date</td>
+                            <td scope="col" style="text-align: center;"><input type="text" class="column_filter"
+                                    id="col7_filter"></td>
+                            <td scope="col" style="text-align: center;"><input type="checkbox" class="column_filter"
+                                    id="col7_regex"></td>
+                            <td scope="col" style="text-align: center;"><input type="checkbox" class="column_filter"
+                                    id="col47_smart" checked="checked"></td>
+                        </tr> 
+                        <tr id="filter_col5"
+                            data-column="8">                                                                                        
+                            <td scope="col" style="text-align: center;">Column - Status</td>
+                            <td scope="col" style="text-align: center;"><input type="text" class="column_filter"
+                                    id="col8_filter"></td>
+                            <td scope="col" style="text-align: center;"><input type="checkbox" class="column_filter"
+                                    id="col8_regex"></td>
+                            <td scope="col" style="text-align: center;"><input type="checkbox" class="column_filter"
+                                    id="col8_smart" checked="checked"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -104,7 +134,9 @@
                     <th scope="col" style="text-align: left;">Name</th>
                     <th scope="col" style="text-align: left;">Loan Amount</th>
                     <th scope="col" style="text-align: left;">Interest Rate</th>
+                    <th scope="col" style="text-align: left;">Interest Amount</th>
                     <th scope="col" style="text-align: left;">Balance</th>
+                    <th scope="col" style="text-align: left;">Paid Amount</th>
                     <th scope="col" style="text-align: left;">Loan Released Date</th>
                     <th scope="col" style="text-align: left;">Due Date</th>
                     <th scope="col" style="text-align: left;">Status</th>
@@ -187,7 +219,13 @@
                         data: "rate"
                     },
                     {
+                        data: "interest_amount"
+                    },
+                    {
                         data: "balance"
+                    },
+                    {
+                        data: "paid_amount"
                     },
                     {
                         data: "interest_start_date"

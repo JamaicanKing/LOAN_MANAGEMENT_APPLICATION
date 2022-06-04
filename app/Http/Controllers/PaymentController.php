@@ -14,17 +14,14 @@ class PaymentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index()
     {
         if(Auth::user()->hasRole('superadministrator') || Auth::user()->hasRole('administrator')){
-            $loan = LoanDetail::getLoanById($id);
-            $payment = Payment::getAllpaymentsByLoanID($loan[0]->loanId);
-        }else{
-        $loan = LoanDetail::getLoanByUserIdAndLoanId($id);
-        $payment = Payment::getAllpaymentsByLoanID($loan[0]->loanId);
+            $payment = Payment::getAllpayments();
+            return view("payment.index",['payments' => $payment]);
         }
     
-        return view("payment.index",['loan' => $loan,'payments' => $payment]);
+        
     }
 
     /**
@@ -72,7 +69,12 @@ class PaymentController extends Controller
      */
     public function show($id)
     {
-        //
+        if(Auth::user()->hasRole('superadministrator') || Auth::user()->hasRole('administrator')){
+        $loan = LoanDetail::getLoanByUserIdAndLoanId($id);
+        $payment = Payment::getAllpaymentsByLoanID($loan[0]->loanId);
+        }
+    
+        return view("payment.index",['loan' => $loan,'payments' => $payment]);
     }
 
     /**

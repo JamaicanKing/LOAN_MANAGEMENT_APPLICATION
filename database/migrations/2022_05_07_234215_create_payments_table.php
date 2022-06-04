@@ -17,6 +17,7 @@ class CreatePaymentsTable extends Migration
             $table->id();
             $table->bigInteger('loan_details_id')->unsigned();
             $table->decimal('paid_amount',10,2);
+            $table->string('collection_date')->nullable();
             $table->string('proof_of_payment')->nullable();
             $table->string('method_of_payment');
             $table->string('payment_location')->nullable();

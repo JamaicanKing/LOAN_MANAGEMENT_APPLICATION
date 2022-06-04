@@ -17,9 +17,7 @@ class LoanDetailController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {   
-
-          
+    {             
         if(Auth::user()->hasRole('superadministrator')){
             $loans = LoanDetail::getAllLoans();
 
@@ -53,6 +51,28 @@ class LoanDetailController extends Controller
             ->rawColumns(['action' => 'action'])
             ->make(true);
         }   
+    }
+
+    public function OverDueLoans()
+    {             
+        if(Auth::user()->hasRole('superadministrator')){
+            $loans = LoanDetail::getAllOverDueLoans();
+
+            return Datatables::of($loans)->editColumn('action', function ($loans) {
+
+
+            })
+            ->addColumn('actions', function($loans){
+                $editUrl = route('loan.edit', $loans->loanId);
+                $deleteUrl = route('loan.destroy', $loans->loanId);
+                $paymentUrl = route('payment.index',['id' => $loans->loanId]);
+            
+                return view('actions', compact('paymentUrl','editUrl', 'deleteUrl'));
+            })
+            ->rawColumns(['action' => 'action'])
+            ->make(true);
+            
+        } 
     }
 
     /**

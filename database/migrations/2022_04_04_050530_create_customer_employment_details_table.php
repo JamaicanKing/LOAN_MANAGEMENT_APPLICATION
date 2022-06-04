@@ -19,7 +19,7 @@ class CreateCustomerEmploymentDetailsTable extends Migration
             $table->string('name_of_employer');
             $table->string('address_of_employer');
             $table->string('position_held');
-            $table->string('tenure');
+            $table->date('tenure');
             $table->timestamps();
 
             $table->foreign('user_id')

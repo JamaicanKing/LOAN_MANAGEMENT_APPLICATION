@@ -17,6 +17,7 @@ class CreateCustomerDetailsTable extends Migration
             $table->id();
             $table->bigInteger('user_id')->unsigned()->unique();
             $table->decimal('phone_number',11,0);
+            $table->decimal('secondary_contact',11,0);
             $table->string('address');
             $table->string('street_address');
             $table->string('city');

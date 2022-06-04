@@ -79,7 +79,8 @@
                             <td scope="col" style="text-align: center;"><input type="checkbox" class="column_filter"
                                     id="col4_smart" checked="checked"></td>
                         </tr>
-                        <tr id="filter_col5" data-column="5">
+                        <tr id="filter_col5"
+                            data-column="5">                                                                                     
                             <td scope="col" style="text-align: center;">Column - Paid Amount</td>
                             <td scope="col" style="text-align: center;"><input type="text" class="column_filter"
                                     id="col4_filter"></td>
@@ -88,7 +89,8 @@
                             <td scope="col" style="text-align: center;"><input type="checkbox" class="column_filter"
                                     id="col4_smart" checked="checked"></td>
                         </tr>
-                        <tr id="filter_col6" data-column="6">
+                         <tr id="filter_col6"
+                            data-column="6">                                                                                       
                             <td scope="col" style="text-align: center;">Column - Loan Release Date</td>
                             <td scope="col" style="text-align: center;"><input type="text" class="column_filter"
                                     id="col6_filter"></td>
@@ -96,8 +98,9 @@
                                     id="col6_regex"></td>
                             <td scope="col" style="text-align: center;"><input type="checkbox" class="column_filter"
                                     id="col6_smart" checked="checked"></td>
-                        </tr>
-                        <tr id="filter_col7" data-column="7">
+                        </tr> 
+                        <tr id="filter_col7"
+                            data-column="7">                                                                                        
                             <td scope="col" style="text-align: center;">Column - Due Date</td>
                             <td scope="col" style="text-align: center;"><input type="text" class="column_filter"
                                     id="col7_filter"></td>
@@ -105,8 +108,9 @@
                                     id="col7_regex"></td>
                             <td scope="col" style="text-align: center;"><input type="checkbox" class="column_filter"
                                     id="col47_smart" checked="checked"></td>
-                        </tr>
-                        <tr id="filter_col5" data-column="8">
+                        </tr> 
+                        <tr id="filter_col5"
+                            data-column="8">                                                                                        
                             <td scope="col" style="text-align: center;">Column - Status</td>
                             <td scope="col" style="text-align: center;"><input type="text" class="column_filter"
                                     id="col8_filter"></td>
@@ -126,17 +130,18 @@
         <table id="example" class="table table-striped table-bordered">
             <thead>
                 <tr>
-                    <th scope="col" style="text-align: left;">Loan ID</th>
-                    <th scope="col" style="text-align: left;">Collection Date</th>
+                    <th scope="col" style="text-align: left;">#</th>
                     <th scope="col" style="text-align: left;">Name</th>
+                    <th scope="col" style="text-align: left;">Loan Amount</th>
+                    <th scope="col" style="text-align: left;">Interest Rate</th>
+                    <th scope="col" style="text-align: left;">Interest Amount</th>
+                    <th scope="col" style="text-align: left;">Balance</th>
                     <th scope="col" style="text-align: left;">Paid Amount</th>
-                    <th scope="col" style="text-align: left;">Proof of payment</th>
-                    <th scope="col" style="text-align: left;">Method Of Payment</th>
-                    <th scope="col" style="text-align: left;">Payment Location</th>
-                    <th scope="col" style="text-align: left;">Time Of payment</th>
-                    <th scope="col" style="text-align: left;">Reference Number</th>
-                    <th scope="col" style="text-align: left;">Confirmed?</th>
-                    <th scope="col" style="text-align: left;">ACTIONS</th>
+                    <th scope="col" style="text-align: left;">Loan Released Date</th>
+                    <th scope="col" style="text-align: left;">Due Date</th>
+                    <th scope="col" style="text-align: left;">Days Overdue</th>
+                    <th scope="col" style="text-align: left;">Status</th>
+                    <th scope="col" style="text-align: left;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -177,60 +182,63 @@
 
         $(function() {
             $('#example').DataTable({
-                ajax: '{{ route('api.payment.index') }}',
+                ajax: '{{ route('api.overdue.index') }}',
                 dom: 'Bfrtip',
                 processing: true,
                 serverSide: true,
-                /*"searching":true,
+                "searching":true,
                 "paging": true,
-                  "order": true,*/
-                buttons: [
-                    'copy',
-                    'excel',
-                    'csv',
-                    'pdf',
-                    {
-                        text: 'Advance Search',
-                        action: function showHideSearch(e, dt, node, config) {
-                            var x = document.getElementById("search");
-                            if (x.style.display === "none") {
-                                x.style.display = "block";
-                            } else {
-                                x.style.display = "none";
+                  "order": true,
+                    buttons: [
+                        'copy',
+                        'excel',
+                        'csv',
+                        'pdf',
+                        {
+                            text: 'Advance Search',
+                            action: function showHideSearch(e, dt, node, config) {
+                                var x = document.getElementById("search");
+                                if (x.style.display === "none") {
+                                    x.style.display = "block";
+                                } else {
+                                    x.style.display = "none";
+                                }
                             }
                         }
-                    }
-                ],
-
+                    ],
+          
                 columns: [{
                         data: "loanId",
                     },
                     {
-                        data: "collection_date",
+                        data: "name",
                     },
                     {
-                        data: "name"
+                        data: "loan_amount"
+                    },
+                    {
+                        data: "rate"
+                    },
+                    {
+                        data: "interest_amount"
+                    },
+                    {
+                        data: "balance"
                     },
                     {
                         data: "paid_amount"
                     },
                     {
-                        data: "proof_of_payment"
+                        data: "interest_start_date"
                     },
                     {
-                        data: "method_of_payment"
+                        data: "due_date"
                     },
                     {
-                        data: "payment_location"
+                        data: "days_overdue"
                     },
                     {
-                        data: "time_of_payment"
-                    },
-                    {
-                        data: "reference_number"
-                    },
-                    {
-                        data: "confirmed"
+                        data: "status"
                     },
                     {
                         data: "actions",

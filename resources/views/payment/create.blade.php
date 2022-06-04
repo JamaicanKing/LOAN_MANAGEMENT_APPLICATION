@@ -39,6 +39,20 @@
                             </div>
 
                             <div class="form-group row">
+                                <label for="collection_date" class="col-md-4 col-form-label text-md-right">{{ __('Collection Date') }}</label>
+
+                                <div class="col-md-6">
+                                    <input id="collection_date" type="text" readonly class="form-control @error('collection_date') is-invalid @enderror" name="collection_date" value="" autocomplete="collection_date" autofocus>
+
+                                    @error('collection_date')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <label for="paid_amount" class="col-md-4 col-form-label text-md-right">{{ __('Amount Paid') }}</label>
 
                                 <div class="col-md-6">

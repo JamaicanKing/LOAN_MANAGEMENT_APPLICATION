@@ -1,7 +1,9 @@
-
 @yield('styling')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 <style>
-    {
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+        {
         box-sizing: border-box;
     }
 
@@ -21,6 +23,43 @@
 
     h1 {
         text-align: center;
+    }
+
+    /*.filepond--drop-label {
+        color: #4c4e53;
+        width: auto;
+
+    }
+
+    .filepond--label-action {
+        text-decoration-color: #babdc0;
+
+    }
+
+    .filepond--panel-root {
+        border-radius: 10px;
+        background-color: #edf0f4;
+        height: 5px;
+    }
+
+    .filepond--item-panel {
+        background-color: #595e68;
+    }
+
+    .filepond--drip-blob {
+        background-color: #7f8a9a;
+    }*/
+
+    .wrapper {
+        height: 167px;
+        display: flex;
+        cursor: pointer;
+        margin: 30px 0;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        border-radius: 5px;
+        border: 2px dashed #6990F2;
     }
 
     input {
@@ -51,7 +90,7 @@
         cursor: pointer;
 
     }
-    
+
 
     button:hover {
         opacity: 0.8;
@@ -90,6 +129,105 @@
         background-color: #04AA6D;
     }
 
+    .imagePreview {
+        width: 300px;
+        min-height: 100px;
+        border: 2 px solid #dddddd;
+        margin-top: 15px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #cccccc;
+
+    }
+
+    .view_image {
+        display: none;
+        width: 100%;
+    }
+
+    section .row {
+        margin-bottom: 10px;
+        background: #E9F0FF;
+        list-style: none;
+        padding: 15px 20px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    section .row i {
+        color: #6990F2;
+        font-size: 30px;
+    }
+
+    section .details span {
+        font-size: 14px;
+    }
+
+    .progress-area .row .content {
+        width: 100%;
+        margin-left: 15px;
+    }
+
+    .progress-area .details {
+        display: flex;
+        align-items: center;
+        margin-bottom: 7px;
+        justify-content: space-between;
+    }
+
+    .progress-area .content .progress-bar {
+        height: 6px;
+        width: 100%;
+        margin-bottom: 4px;
+        background: #fff;
+        border-radius: 30px;
+    }
+
+    .content .progress-bar .progress {
+        height: 100%;
+        width: 0%;
+        background: #6990F2;
+        border-radius: inherit;
+    }
+
+    .uploaded-area {
+        max-height: 232px;
+        overflow-y: scroll;
+    }
+
+    .uploaded-area.onprogress {
+        max-height: 150px;
+    }
+
+    .uploaded-area::-webkit-scrollbar {
+        width: 0px;
+    }
+
+    .uploaded-area .row .content {
+        display: flex;
+        align-items: center;
+    }
+
+    .uploaded-area .row .details {
+        display: flex;
+        margin-left: 15px;
+        flex-direction: column;
+    }
+
+    .uploaded-area .row .details .size {
+        color: #404040;
+        font-size: 11px;
+    }
+
+    .uploaded-area i.fa-check {
+        font-size: 16px;
+    }
+
 </style>
 <x-app-layout>
 
@@ -107,7 +245,7 @@
         </div>
     @endif
 
-    <form method="POST" id="regForm"  action="{{ route('loan.store') }}"  runat="server" enctype="multipart/form-data">
+    <form method="POST" id="regForm" action="{{ route('loan.store') }}" runat="server" enctype="multipart/form-data">
         @csrf
         <div class="shadow overflow-hidden sm:rounded-md">
 
@@ -119,7 +257,8 @@
                                 class="block text-sm font-medium text-gray-700">{{ __('First Name') }}</label>
                             <input id="firstname" oninput="this.className = ''" type="text"
                                 class="form-control @error('firstname') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="firstname" value="{{ $customerDetail[0]->firstname ?? ''  }}" autocomplete="firstname" autofocus>
+                                name="firstname" value="{{ $customerDetail[0]->firstname ?? '' }}"
+                                autocomplete="firstname" autofocus>
 
                             @error('firstname')
                                 <span class="invalid-feedback" role="alert">
@@ -134,7 +273,8 @@
                                 class="block text-sm font-medium text-gray-700">{{ __('Last Name') }}</label>
                             <input id="lastname" oninput="this.className = ''" type="text"
                                 class="form-control @error('lastname') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="lastname" value="{{ $customerDetail[0]->lastname ?? '' }}" autocomplete="lastname" autofocus>
+                                name="lastname" value="{{ $customerDetail[0]->lastname ?? '' }}"
+                                autocomplete="lastname" autofocus>
 
                             @error('lastname')
                                 <span class="invalid-feedback" role="alert">
@@ -149,7 +289,8 @@
                                 class="block text-sm font-medium text-gray-700">{{ __('Email') }}</label>
                             <input id="email" oninput="this.className = ''" type="text"
                                 class="form-control @error('email') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="email" value="{{ $customerDetail[0]->email ?? '' }}" autocomplete="email" autofocus>
+                                name="email" value="{{ $customerDetail[0]->email ?? '' }}" autocomplete="email"
+                                autofocus>
 
                             @error('email')
                                 <span class="invalid-feedback" role="alert">vendor
@@ -165,10 +306,26 @@
 
                             <input id="phone_number" oninput="this.className = ''" type="text"
                                 class="form-control @error('phone_number') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="phone_number" value="{{ $customerDetail[0]->phone_number ?? '' }}" autocomplete="phone_number"
-                                autofocus>
+                                name="phone_number" value="{{ $customerDetail[0]->phone_number ?? '' }}"
+                                autocomplete="phone_number" autofocus>
 
                             @error('phone_number')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-1">
+                            <label for="sec"
+                                class="block text-sm font-medium text-gray-700">{{ __('Secondary Contact Number') }}</label>
+
+                            <input id="secondary_number" oninput="this.className = ''" type="text"
+                                class="form-control @error('secondary_number') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                name="secondary_number" value="{{ $customerDetail[0]->secondary_number ?? '' }}"
+                                autocomplete="phone_number" autofocus>
+
+                            @error('secondary_number')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -182,7 +339,8 @@
 
                             <input id="address" oninput="this.className = ''" type="text"
                                 class="form-control @error('address') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="address" value="{{ $customerDetail[0]->address ?? '' }}" autocomplete="address" autofocus>
+                                name="address" value="{{ $customerDetail[0]->address ?? '' }}" autocomplete="address"
+                                autofocus>
 
                             @error('address')
                                 <span class="invalid-feedback" role="alert">
@@ -214,7 +372,8 @@
 
                             <input id="city" oninput="this.className = ''" type="text"
                                 class="form-control @error('city') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="city" value="{{ $customerDetail[0]->city ?? '' }}" autocomplete="city" autofocus>
+                                name="city" value="{{ $customerDetail[0]->city ?? '' }}" autocomplete="city"
+                                autofocus>
 
                             @error('city')
                                 <span class="invalid-feedback" role="alert">
@@ -229,7 +388,8 @@
 
                             <input id="state" oninput="this.className = ''" type="text"
                                 class="form-control @error('state') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="state" value="{{ $customerDetail[0]->state ?? '' }}" autocomplete="state" autofocus>
+                                name="state" value="{{ $customerDetail[0]->state ?? '' }}" autocomplete="state"
+                                autofocus>
 
                             @error('state')
                                 <span class="invalid-feedback" role="alert">
@@ -244,7 +404,8 @@
 
                             <input id="postal" oninput="this.className = ''" type="text"
                                 class="form-control @error('postal') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="postal" value="{{ $customerDetail[0]->postal ?? '' }}" autocomplete="postal" autofocus>
+                                name="postal" value="{{ $customerDetail[0]->postal ?? '' }}" autocomplete="postal"
+                                autofocus>
 
                             @error('postal')
                                 <span class="invalid-feedback" role="alert">
@@ -269,18 +430,17 @@
                             @enderror
                         </div>
 
-                        <div class="col-span-6 sm:col-span-6">
-                            <div class="image-upload">
-                                <label for="identification"
-                                    class="block text-sm font-medium text-gray-700">{{ __('INSERT IDENTIFICATION HERE') }}</label>
-                                
+                        <div class="wrapper" id="wrapper">
 
 
-                                <div>
-                                    <input type="file" oninput="this.className = ''" id="file" name="file">
-                                </div>
-                            </div>
+                            <input class="file-input" type="file" name="file" hidden>
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Browse File to Upload</p>
+
+                            <section class="progress-area"></section>
+                            <section class="uploaded-area"></section>
                         </div>
+                        
 
                         <div class="col-span-6 sm:col-span-2">
                             <label for="identification_number"
@@ -288,7 +448,8 @@
 
                             <input id="identification_number" oninput="this.className = ''" type="text"
                                 class="form-control @error('identification_number') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="identification_number" value="{{ $customerDetail[0]->identification_number ?? '' }}"
+                                name="identification_number"
+                                value="{{ $customerDetail[0]->identification_number ?? '' }}"
                                 autocomplete="identification_number" autofocus>
 
                             @error('identification_number')
@@ -303,12 +464,15 @@
                                 class="block text-sm font-medium text-gray-700">{{ __('Identification Expiration ') }}</label>
                             <input oninput="this.className = ''" type="date" id="identification_expiration"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="identification_expiration" value="{{ $customerDetail[0]->identification_expiration ?? '' }}">
+                                name="identification_expiration[]"
+                                value="{{ $customerDetail[0]->identification_expiration ?? '' }}">
                         </div>
+
+
                     </div>
                 </div>
             </div>
-            <div class="tab">Contact Person Information:
+            <div class="tab">Emergency Contact Information:
                 <div class="px-4 py-5 bg-white sm:p-6">
                     <div class="grid grid-cols-6 gap-6">
                         <div class="col-span-6 sm:col-span-6">
@@ -317,7 +481,8 @@
 
                             <input id="contact_person_name" oninput="this.className = ''" type="text"
                                 class="form-control @error('contact_person_name') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="contact_person_name" value="{{ $customerDetail[0]->contact_person_name ?? '' }}"
+                                name="contact_person_name"
+                                value="{{ $customerDetail[0]->contact_person_name ?? '' }}"
                                 autocomplete="contact_person_name" autofocus>
                         </div>
 
@@ -327,7 +492,8 @@
 
                             <input id="contact_person_address" oninput="this.className = ''" type="text"
                                 class="form-control @error('contact_person_address') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="contact_person_address" value="{{ $customerDetail[0]->contact_person_address ?? '' }}"
+                                name="contact_person_address"
+                                value="{{ $customerDetail[0]->contact_person_address ?? '' }}"
                                 autocomplete="contact_person_address" autofocus>
 
                             @error('contact_person_address')
@@ -343,7 +509,8 @@
 
                             <input id="contact_person_number" oninput="this.className = ''" type="text"
                                 class="form-control @error('contact_person_number') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="contact_person_number" value="{{ $customerDetail[0]->contact_person_number ?? '' }}"
+                                name="contact_person_number"
+                                value="{{ $customerDetail[0]->contact_person_number ?? '' }}"
                                 autocomplete="contact_person_number" autofocus>
 
                             @error('contact_person_number')
@@ -359,8 +526,8 @@
 
                             <input id="kinship" oninput="this.className = ''" type="text"
                                 class="form-control @error('kinship') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="kinship" name="kinship" value="{{ $customerDetail[0]->kinship ?? '' }}" autocomplete="kinship"
-                                autofocus>
+                                name="kinship" name="kinship" value="{{ $customerDetail[0]->kinship ?? '' }}"
+                                autocomplete="kinship" autofocus>
 
                             @error('kinship')
                                 <span class="invalid-feedback" role="alert">
@@ -375,7 +542,8 @@
 
                             <input id="length_of_relationship" oninput="this.className = ''" type="text"
                                 class="form-control @error('length_of_relationship') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="length_of_relationship" value="{{ $customerDetail[0]->length_of_relationship ?? '' }}"
+                                name="length_of_relationship"
+                                value="{{ $customerDetail[0]->length_of_relationship ?? '' }}"
                                 autocomplete="length_of_relationship" autofocus>
 
                             @error('length_of_relationship')
@@ -414,7 +582,8 @@
 
                             <input id="address_of_employer" oninput="this.className = ''" type="text"
                                 class="form-control @error('address_of_employer') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="address_of_employer" value="{{ $customerDetail[0]->address_of_employer ?? '' }}"
+                                name="address_of_employer"
+                                value="{{ $customerDetail[0]->address_of_employer ?? '' }}"
                                 autocomplete="address_of_employer" autofocus>
 
                             @error('address_of_employer')
@@ -431,8 +600,8 @@
 
                             <input id="position_held" oninput="this.className = ''" type="text"
                                 class="form-control @error('position_held') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="position_held" value="{{ $customerDetail[0]->position_held ?? '' }}" autocomplete="position_held"
-                                autofocus>
+                                name="position_held" value="{{ $customerDetail[0]->position_held ?? '' }}"
+                                autocomplete="position_held" autofocus>
 
                             @error('position_held')
                                 <span class="invalid-feedback" role="alert">
@@ -442,19 +611,12 @@
 
                         </div>
 
-                        <div class="col-span-6 sm:col-span-3">
+                        <div class="col-span-6 sm:col-span-2">
                             <label for="tenure"
                                 class="block text-sm font-medium text-gray-700">{{ __('Tenure') }}</label>
-
-                            <input id="tenure" oninput="this.className = ''" type="text"
-                                class="form-control @error('tenure') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="tenure" value="{{ $customerDetail[0]->tenure ?? '' }}" autocomplete="tenure" autofocus>
-
-                            @error('tenure')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                            <input oninput="this.className = ''" type="date" id="tenure"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                name="identification_expiration" value="{{ $customerDetail[0]->tenure ?? '' }}">
                         </div>
                     </div>
                 </div>
@@ -495,11 +657,12 @@
                         </div>
 
                         <div class="col-span-6 sm:col-span-6">
-                            <label for="repayment_cycle" class="block text-sm font-medium text-gray-700"><b>{{ __('Repayment Cycle') }}</b></label>
+                            <label for="repayment_cycle"
+                                class="block text-sm font-medium text-gray-700"><b>{{ __('Repayment Cycle') }}</b></label>
                             <div style="visibility:hidden; color:red; " id="chk_option_error">
                                 Please select at least one option.
-                                </div>
-                            
+                            </div>
+
                             <input type="checkbox" id="cycle_weekly" name="repayment_cycle" value="Weekly">
                             <label for="cycle">Weekly</label><br>
                             <input type="checkbox" id="cycle_fortnightly" name="repayment_cycle" value="Fortnighty">
@@ -509,15 +672,17 @@
                         </div>
 
                         <div class="col-span-6 sm:col-span-6">
-                            <label for="repayment_cycle" class="block text-sm font-medium text-gray-700"><b>{{ __('Method in which you would like to receive loan?') }}</b></label>
+                            <label for="repayment_cycle"
+                                class="block text-sm font-medium text-gray-700"><b>{{ __('Method in which you would like to receive loan?') }}</b></label>
                             <div style="visibility:hidden; color:red; " id="chk_option_error2">
                                 Please select at least one option.
                             </div>
-                            
+
                             <input type="checkbox" id="bank_transfer" name="receive_method" value="Bank transfer">
                             <label for="cycle">Bank Tranfer</label><br>
-                            <input type="checkbox" id="cash_in_hand" onchange="showHideBankingInfo(this.value)" name="receive_method" value="cash in hand ">
-                            <label for="cycle">Cash In Hand</label><br>
+                            <input type="checkbox" id="cheque" onchange="showHideBankingInfo(this.value)"
+                                name="receive_method" value="cheque">
+                            <label for="cycle">Cheque</label><br>
                         </div>
 
                         <div id="bankingInfo" class="col-span-6">
@@ -586,11 +751,9 @@
                             </div>
                         </div>
                         <div class="col-span-6 sm:col-span-6">
-                            <label for="exampleFormControlTextarea1" class="form-label inline-block mb-2 text-gray-700"
-                              >Special Notes</label
-                            >
-                            <textarea
-                              class="
+                            <label for="exampleFormControlTextarea1"
+                                class="form-label inline-block mb-2 text-gray-700">Special Notes</label>
+                            <textarea class="
                                 form-control
                                 block
                                 w-full
@@ -608,11 +771,8 @@
                                 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
                                 sm:col-span-6
                               "
-                              id="notes"
-                                name="note"
-                              placeholder="Your message to us"
-                            ></textarea>
-                          </div>
+                                id="notes" name="note" placeholder="Your message to us"></textarea>
+                        </div>
 
                     </div>
                 </div>
@@ -628,6 +788,7 @@
             class="inline-block mt-2 px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
             onclick="nextPrev(1)">Next</button>
 
+
         <!-- Circles which indicates the steps of the form: -->
         <div style="text-align:center;margin-top:40px;">
             <span class="step"></span>
@@ -635,6 +796,8 @@
             <span class="step"></span>
             <span class="step"></span>
         </div>
+
+
 
     </form>
 
@@ -686,42 +849,50 @@
             // This function deals with validation of the form fields
             var x, y, i, z, valid = true;
 
-            x = document.getElementsByClassName("tab");
-            y = x[currentTab].getElementsByTagName("input");
-            
-            // A loop that checks every input field in the current tab:
-            for (i = 0; i < y.length; i++) {
-                // If a field is empty...
-                if (y[i].value == "" && y[i].id != "maintainace_branch" && y[i].id != "name_on_account" && y[i].id != "account_number" && y[i].id != "account_type") {
-                   // add an "invalid" class to the field:
-                   y[i].className += " invalid";
-                    // and set the current valid status to false
-                    valid = false;
-                }
-            }
-            
-                if(y["cycle_weekly"]  && document.querySelector('#cycle_weekly:checked') !== null || y["cycle_monthly"] && document.querySelector('#cycle_monthly:checked') !== null ||  y["cycle_fortnightly"] && document.querySelector('#cycle_fortnightly:checked') !== null ){
-                   valid = true;
-                   
-                }else if(y["cycle_weekly"]  && document.querySelector('#cycle_weekly:checked') === null || y["cycle_monthly"] && document.querySelector('#cycle_monthly:checked') === null ||  y["cycle_fortnightly"] && document.querySelector('#cycle_fortnightly:checked') === null ){
-                    document.getElementById("chk_option_error").style.visibility = "visible";
-                    y[i].className += " invalid";
-                    valid = false;
-                }
+            /* x = document.getElementsByClassName("tab");
+                        y = x[currentTab].getElementsByTagName("input");
 
-                if(y["bank_transfer"]  && document.querySelector('#bank_transfer:checked') !== null || y["cash_in_hand"] && document.querySelector('#cash_in_hand:checked') !== null){
-                   valid = true;
-                   
-                }else if(y["bank_transfer"]  && document.querySelector('#bank_transfer:checked') === null || y["cash_in_hand"] && document.querySelector('#cash_in_hand:checked') === null){
-                    document.getElementById("chk_option_error2").style.visibility = "visible";
-                    y[i].className += " invalid";
-                    valid = false;
-                }         
-              
+                        // A loop that checks every input field in the current tab:
+                        for (i = 0; i < y.length; i++) {
+                            // If a field is empty...
+                            if (y[i].value == "" && y[i].id != "maintainace_branch" && y[i].id != "name_on_account" && y[i].id !=
+                                "account_number" && y[i].id != "account_type") {
+                                // add an "invalid" class to the field:
+                                y[i].className += " invalid";
+                                // and set the current valid status to false
+                                valid = false;
+                            }
+                        }
+
+                        if (y["cycle_weekly"] && document.querySelector('#cycle_weekly:checked') !== null || y["cycle_monthly"] &&
+                            document.querySelector('#cycle_monthly:checked') !== null || y["cycle_fortnightly"] && document
+                            .querySelector('#cycle_fortnightly:checked') !== null) {
+                            valid = true;
+
+                        } else if (y["cycle_weekly"] && document.querySelector('#cycle_weekly:checked') === null || y[
+                                "cycle_monthly"] && document.querySelector('#cycle_monthly:checked') === null || y[
+                                "cycle_fortnightly"] &&
+                            document.querySelector('#cycle_fortnightly:checked') === null) {
+                            document.getElementById("chk_option_error").style.visibility = "visible";
+                            y[i].className += " invalid";
+                            valid = false;
+                        }
+
+                        if (y["bank_transfer"] && document.querySelector('#bank_transfer:checked') !== null || y["cheque"] && document
+                            .querySelector('#cheque:checked') !== null) {
+                            valid = true;
+
+                        } else if (y["bank_transfer"] && document.querySelector('#bank_transfer:checked') === null || y["cheque"] &&
+                            document.querySelector('#cheque:checked') === null) {
+                            document.getElementById("chk_option_error2").style.visibility = "visible";
+                            y[i].className += " invalid";
+                            valid = false;
+                        }
+            */
             // If the valid status is true, mark the step as finished and valid:
             if (valid) {
                 document.getElementsByClassName("step")[currentTab].className += " finish";
-                
+
             }
             return valid; // return the valid status
         }
@@ -737,30 +908,100 @@
             x[n].className += " active";
         }
 
-        function showHideBankingInfo(value){
+        function showHideBankingInfo(value) {
             var x = document.getElementById("bankingInfo");
-            
-            if(document.querySelector('#cash_in_hand:checked') !== null){
+
+            if (document.querySelector('#cheque:checked') !== null) {
                 x.style.display = "none";
-            }else{
+            } else {
                 x.style.display = "block";
             }
         }
 
         function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            
-            reader.onload = function (e) {
-                $('#file').attr('src', e.target.result);
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    $('#file').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
             }
-            
-            reader.readAsDataURL(input.files[0]);
         }
-    }
-    
-        $("#image").change(function(){
+
+        $("#image").change(function() {
             readURL(this);
         });
     </script>
+    <script>
+        const form = document.getElementById("regForm"),
+         ClickArea = document.getElementById("wrapper"),
+            fileInput = document.querySelector(".file-input"),
+            progressArea = document.querySelector(".progress-area"),
+            uploadedArea = document.querySelector(".uploaded-area");
 
+        ClickArea.addEventListener("click", () => {
+
+            fileInput.click();
+        });
+        fileInput.onchange = ({
+             target
+         }) => {
+             let file = target.files[0];
+             if (file) {
+                 let fileName = file.name;
+                 if (fileName.length >= 12) {
+                     let splitName = fileName.split('.');
+                     fileName = splitName[0].substring(0, 13) + "... ." + splitName[1];
+                 }
+                 uploadFile(fileName);
+             }
+         }
+
+         function uploadFile(name) {
+             let xhr = new XMLHttpRequest();
+             xhr.open("POST", "/upload");
+             xhr.upload.addEventListener("progress", ({
+                 loaded,
+                 total
+             }) => {
+                 let fileLoaded = Math.floor((loaded / total) * 100);
+                 let fileTotal = Math.floor(total / 1000);
+                 let fileSize;
+                 (fileTotal < 1024) ? fileSize = fileTotal + " KB": fileSize = (loaded / (1024 * 1024)).toFixed(2) +
+                     " MB";
+                 let progressHTML = `<li class="row">
+                       <i class="fas fa-file-alt"></i>
+                       <div class="content">
+                         <div class="details">
+                           <span class="name">${name} • Uploading</span>
+                           <span class="percent">${fileLoaded}%</span>
+                         </div>
+                         <div class="progress-bar">
+                           <div class="progress" style="width: ${fileLoaded}%"></div>
+                         </div>
+                       </div>
+                     </li>`;
+                 uploadedArea.classList.add("onprogress");
+                 progressArea.innerHTML = progressHTML;
+                 if (loaded == total) {
+                     progressArea.innerHTML = "";
+                     let uploadedHTML = `<li class="row">
+                         <div class="content upload">
+                           <i class="fas fa-file-alt"></i>
+                           <div class="details">
+                             <span class="name">${name} • Uploaded</span>
+                             <span class="size">${fileSize}</span>
+                           </div>
+                         </div>
+                         <i class="fas fa-check"></i>
+                       </li>`;
+                     uploadedArea.classList.remove("onprogress");
+                     uploadedArea.insertAdjacentHTML("afterbegin", uploadedHTML);
+                 }
+             });
+             let data = new FormData(form);
+             xhr.send(data);
+         }
+    </script>

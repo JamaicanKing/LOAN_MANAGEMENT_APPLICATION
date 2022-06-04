@@ -184,7 +184,7 @@
 
                         <div class="col-span-6 sm:col-span-1">
                             <label for="phone_number"
-                                class="block text-sm font-medium text-gray-700">{{ __('Person Number') }}</label>
+                                class="block text-sm font-medium text-gray-700">{{ __('Phone Number') }}</label>
 
                             <input id="phone_number" oninput="this.className = ''" type="text"
                                 class="form-control @error('phone_number') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -469,19 +469,12 @@
 
                         </div>
 
-                        <div class="col-span-6 sm:col-span-3">
+                        <div class="col-span-6 sm:col-span-2">
                             <label for="tenure"
                                 class="block text-sm font-medium text-gray-700">{{ __('Tenure') }}</label>
-
-                            <input id="tenure" oninput="this.className = ''" type="text"
-                                class="form-control @error('tenure') is-invalid @enderror mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="tenure" value="{{ $loan[0]->tenure }}" autocomplete="tenure" autofocus>
-
-                            @error('tenure')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                            <input oninput="this.className = ''" type="date" id="tenure"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                name="identification_expiration" value="{{ $loan[0]->tenure ?? '' }}">
                         </div>
                     </div>
                 </div>

@@ -31,6 +31,18 @@ class LoanDetailController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function overdue(Request $request)
+    {
+        
+        return view('loan.overdue');
+  
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -49,7 +61,15 @@ class LoanDetailController extends Controller
      */
     public function store(Request $request)
     {
-        
+        dd($request);
+        if($request->hasFile('file')){
+            $filenameWithExt = $request->file('file')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt,PATHINFO_FILENAME);
+            $extension = $request->file('file')->getClientOriginalExtension();
+            $fileNameToStore= $filename.'_'.time().'.'. $extension;
+            $path = $request->file('file')->storeAs('public',$fileNameToStore);
+           
+        }
         $statuses = LoanStatuses::getAllStatuses();
         $interestrates = InterestRate::getAllRates();
         $interestRate = 0;
@@ -65,6 +85,7 @@ class LoanDetailController extends Controller
             'contact_person_address' => $request->input('contact_person_address'),
             'email' =>   $request->input('email'),
             'phone_number' => $request->input('phone_number'),
+            'secondary_contact' => $request->input('secondary_contact'),
             'address' => $request->input('address'),
             'street_address' => $request->input('street_address'),
             'city' => $request->input('city'),
@@ -153,7 +174,7 @@ class LoanDetailController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+      
         if($request->input('repayment_cycle') == 'monthly'){
             $dueDate = date('Y-m-d',strtotime($request->input('interest_start_date'). ' + 30 days'));
         }elseif($request->input('repayment_cycle') == 'weekly'){
